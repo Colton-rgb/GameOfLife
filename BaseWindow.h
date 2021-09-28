@@ -4,6 +4,7 @@ template <class DERIVED_TYPE>
 class BaseWindow
 {
 public:
+
     static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
         DERIVED_TYPE* pThis = NULL;
