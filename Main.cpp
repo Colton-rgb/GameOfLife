@@ -3,8 +3,13 @@
 #endif 
 
 #include <windows.h>
+#include <d2d1.h>
+
+#pragma comment(lib, "d2d1")
 
 #include "BaseWindow.h"
+
+#include "MainWindow.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
