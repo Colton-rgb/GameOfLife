@@ -2,7 +2,7 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-    CellGrid cellGrid = CellGrid(50, 50);
+    CellGrid cellGrid = CellGrid(24, 24);
 
     ID2D1Factory          *pFactory;
     ID2D1HwndRenderTarget *pRenderTarget;

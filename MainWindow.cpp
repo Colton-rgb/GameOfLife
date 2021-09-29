@@ -86,10 +86,7 @@ void MainWindow::CalculateLayout()
 {
     if (pRenderTarget != NULL)
     {
-        D2D1_SIZE_F size = pRenderTarget->GetSize();
-        const float x = size.width / 2;
-        const float y = size.height / 2;
-        const float radius = min(x, y);
+        
     }
 }
 
@@ -122,11 +119,20 @@ void MainWindow::DrawCellGrid()
     D2D1_SIZE_F size = pRenderTarget->GetSize();
     float cellLength = size.height / cellGrid.height;
 
+    int init_x = (size.width - (cellLength * cellGrid.width)) / 2;
+
+
     for (int i = 0; i < cellGrid.width; i++)
     {
         for (int j = 0; j < cellGrid.height; j++)
         {
-            rectangles[i][j] = D2D1::RectF(0 + cellLength*i, 0 + cellLength * j, cellLength + cellLength*i, cellLength+cellLength*j);
+            rectangles[i][j] = D2D1::RectF(
+                init_x + cellLength * i, // Left
+                0 + cellLength * j, // Top
+                init_x + cellLength + cellLength * i, //Right
+                cellLength + cellLength * j // Bottom
+            );
+
             if (cellGrid.cells[i][j] == false)
             {
                 pBrush->SetColor(D2D1::ColorF(0, 0, 0));
@@ -136,7 +142,20 @@ void MainWindow::DrawCellGrid()
                 pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
             }
             pRenderTarget->FillRectangle(rectangles[i][j], pBrush);
+
         }
+    }
+
+    // Draw Grid
+    pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+    for (int i = 0; i < cellGrid.width + 1; i++)
+    {
+        pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 1);
+    }
+
+    for (int j = 0; j < cellGrid.height + 1; j++)
+    {
+        pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
     }
 
 }

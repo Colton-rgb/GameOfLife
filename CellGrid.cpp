@@ -17,14 +17,12 @@ CellGrid::CellGrid(int width, int height)
 	//Debug thing
 	cells[0][0] = true;
 
-	bool flag = false;
 	for (int i = 0; i < width; i++)
 	{
-		flag = !flag;
 		for (int j = 0; j < height; j++)
 		{
-			cells[i][j] = flag;
-			flag = !flag;
+			cells[i][j] = 0;
 		}
 	}
+	cells[8][8] = true;
 }
