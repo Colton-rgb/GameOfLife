@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class MainWindow : public BaseWindow<MainWindow>
 {
@@ -20,6 +21,11 @@ class MainWindow : public BaseWindow<MainWindow>
 public:
     MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL)
     {
+        int a = 16;
+        wchar_t buffer[256];
+        wsprintfW(buffer, L"%d", cellGrid.getLiveNeighbors(0,0));
+        MessageBoxW(nullptr, buffer, buffer, MB_OK);
+        OutputDebugString(buffer);
     }
 
     PCWSTR  ClassName() const { return L"Main Window Class"; }
