@@ -20,11 +20,6 @@ class MainWindow : public BaseWindow<MainWindow>
 public:
     MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL)
     {
-        rectangles = new D2D1_RECT_F * [cellGrid.width];
-        for (int i = 0; i < cellGrid.width; i++)
-        {
-            rectangles[i] = new D2D1_RECT_F[cellGrid.height];
-        }
     }
 
     PCWSTR  ClassName() const { return L"Main Window Class"; }

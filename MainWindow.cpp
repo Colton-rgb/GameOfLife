@@ -68,9 +68,17 @@ HRESULT MainWindow::CreateGraphicsResources()
                 CalculateLayout();
             }
         }
-
-
     }
+
+    if (rectangles == NULL)
+    {
+        rectangles = new D2D1_RECT_F * [cellGrid.width];
+        for (int i = 0; i < cellGrid.width; i++)
+        {
+            rectangles[i] = new D2D1_RECT_F[cellGrid.height];
+        }
+    }
+
     return hr;
 }
 
