@@ -8,14 +8,14 @@
 #pragma comment(lib, "d2d1")
 
 #include "BaseWindow.h"
-
+#include "CellGrid.h"
 #include "MainWindow.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
     MainWindow win;
 
-    if (!win.Create(L"Learn to Program Windows", WS_OVERLAPPEDWINDOW))
+    if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW))
     {
         return 0;
     }

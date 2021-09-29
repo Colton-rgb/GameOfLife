@@ -68,6 +68,8 @@ HRESULT MainWindow::CreateGraphicsResources()
                 CalculateLayout();
             }
         }
+
+
     }
     return hr;
 }
@@ -80,8 +82,6 @@ void MainWindow::CalculateLayout()
         const float x = size.width / 2;
         const float y = size.height / 2;
         const float radius = min(x, y);
-        ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), radius, radius);
-        rectangle = D2D1::RectF(100, 100, 200, 200);
     }
 }
 
@@ -95,7 +95,7 @@ void MainWindow::OnPaint()
 
         pRenderTarget->BeginDraw();
 
-        pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
+        pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::DimGray));
        // pRenderTarget->FillEllipse(ellipse, pBrush);
 
         DrawCellGrid();
@@ -111,12 +111,26 @@ void MainWindow::OnPaint()
 
 void MainWindow::DrawCellGrid()
 {
-    D2D1_RECT_F* rectangles = new D2D1_RECT_F[5];
-    for (int i = 0; i < 5; i++)
+    D2D1_SIZE_F size = pRenderTarget->GetSize();
+    float cellLength = size.height / cellGrid.height;
+
+    for (int i = 0; i < cellGrid.width; i++)
     {
-        rectangles[i] = D2D1::RectF(100 + 200 * i, 100, 200 + 200 * i, 200);
-        pRenderTarget->FillRectangle(rectangles[i], pBrush);
+        for (int j = 0; j < cellGrid.height; j++)
+        {
+            rectangles[i][j] = D2D1::RectF(0 + cellLength*i, 0 + cellLength * j, cellLength + cellLength*i, cellLength+cellLength*j);
+            if (cellGrid.cells[i][j] == false)
+            {
+                pBrush->SetColor(D2D1::ColorF(0, 0, 0));
+            }
+            else
+            {
+                pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+            }
+            pRenderTarget->FillRectangle(rectangles[i][j], pBrush);
+        }
     }
+
 }
 
 void MainWindow::Resize()

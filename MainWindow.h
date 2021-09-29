@@ -2,12 +2,12 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
+    CellGrid cellGrid = CellGrid(50, 50);
 
     ID2D1Factory          *pFactory;
     ID2D1HwndRenderTarget *pRenderTarget;
     ID2D1SolidColorBrush  *pBrush;
-    D2D1_ELLIPSE           ellipse;
-    D2D1_RECT_F            rectangle;
+    D2D1_RECT_F          **rectangles;
 
     void    CalculateLayout();
     HRESULT CreateGraphicsResources();
@@ -20,8 +20,13 @@ class MainWindow : public BaseWindow<MainWindow>
 public:
     MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL)
     {
+        rectangles = new D2D1_RECT_F * [cellGrid.width];
+        for (int i = 0; i < cellGrid.width; i++)
+        {
+            rectangles[i] = new D2D1_RECT_F[cellGrid.height];
+        }
     }
 
-    PCWSTR  ClassName() const { return L"Sample Window Class"; }
+    PCWSTR  ClassName() const { return L"Main Window Class"; }
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
