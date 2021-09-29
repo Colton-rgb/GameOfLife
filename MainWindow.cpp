@@ -1,42 +1,49 @@
 #include <windows.h>
 #include <d2d1.h>
 
+
+#include "CellGrid.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
+
+template <class T> void SafeRelease(T** ppT)
+{
+    if (*ppT)
+    {
+        (*ppT)->Release();
+        *ppT = NULL;
+    }
+}
 
 LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
+    case WM_CREATE:
+        if (FAILED(D2D1CreateFactory(
+            D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
+        {
+            return -1;  // Fail CreateWindowEx.
+        }
+        return 0;
+
     case WM_DESTROY:
+        DiscardGraphicsResources();
+        SafeRelease(&pFactory);
         PostQuitMessage(0);
         return 0;
 
     case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(m_hwnd, &ps);
-        FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-        EndPaint(m_hwnd, &ps);
-    }
-    return 0;
+        OnPaint();
+        return 0;
 
-    default:
-        return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
-    }
-    return TRUE;
-}
 
-void MainWindow::CalculateLayout()
-{
-    if (pRenderTarget != NULL)
-    {
-        D2D1_SIZE_F size = pRenderTarget->GetSize();
-        const float x = size.width / 2;
-        const float y = size.height / 2;
-        const float radius = min(x, y);
-        ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), radius, radius);
+
+    case WM_SIZE:
+        Resize();
+        return 0;
     }
+    return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
 
 HRESULT MainWindow::CreateGraphicsResources()
@@ -49,10 +56,7 @@ HRESULT MainWindow::CreateGraphicsResources()
 
         D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
 
-        hr = pFactory->CreateHwndRenderTarget(
-            D2D1::RenderTargetProperties(),
-            D2D1::HwndRenderTargetProperties(m_hwnd, size),
-            &pRenderTarget);
+        hr = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(m_hwnd, size), &pRenderTarget);
 
         if (SUCCEEDED(hr))
         {
@@ -66,4 +70,72 @@ HRESULT MainWindow::CreateGraphicsResources()
         }
     }
     return hr;
+}
+
+void MainWindow::CalculateLayout()
+{
+    if (pRenderTarget != NULL)
+    {
+        D2D1_SIZE_F size = pRenderTarget->GetSize();
+        const float x = size.width / 2;
+        const float y = size.height / 2;
+        const float radius = min(x, y);
+        ellipse = D2D1::Ellipse(D2D1::Point2F(x, y), radius, radius);
+        rectangle = D2D1::RectF(100, 100, 200, 200);
+    }
+}
+
+void MainWindow::OnPaint()
+{
+    HRESULT hr = CreateGraphicsResources();
+    if (SUCCEEDED(hr))
+    {
+        PAINTSTRUCT ps;
+        BeginPaint(m_hwnd, &ps);
+
+        pRenderTarget->BeginDraw();
+
+        pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::SkyBlue));
+       // pRenderTarget->FillEllipse(ellipse, pBrush);
+
+        DrawCellGrid();
+
+        hr = pRenderTarget->EndDraw();
+        if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
+        {
+            DiscardGraphicsResources();
+        }
+        EndPaint(m_hwnd, &ps);
+    }
+}
+
+void MainWindow::DrawCellGrid()
+{
+    D2D1_RECT_F* rectangles = new D2D1_RECT_F[5];
+    for (int i = 0; i < 5; i++)
+    {
+        rectangles[i] = D2D1::RectF(100 + 200 * i, 100, 200 + 200 * i, 200);
+        pRenderTarget->FillRectangle(rectangles[i], pBrush);
+    }
+}
+
+void MainWindow::Resize()
+{
+    if (pRenderTarget != NULL)
+    {
+        RECT rc;
+        GetClientRect(m_hwnd, &rc);
+
+        D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+
+        pRenderTarget->Resize(size);
+        CalculateLayout();
+        InvalidateRect(m_hwnd, NULL, FALSE);
+    }
+}
+
+void MainWindow::DiscardGraphicsResources()
+{
+    SafeRelease(&pRenderTarget);
+    SafeRelease(&pBrush);
 }
