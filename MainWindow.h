@@ -3,7 +3,7 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-    CellGrid cellGrid = CellGrid(24, 24);
+    CellGrid cellGrid = CellGrid(50, 50);
 
     ID2D1Factory          *pFactory;
     ID2D1HwndRenderTarget *pRenderTarget;
@@ -24,7 +24,7 @@ public:
         int a = 16;
         wchar_t buffer[256];
         wsprintfW(buffer, L"%d", cellGrid.getLiveNeighbors(0,0));
-        MessageBoxW(nullptr, buffer, buffer, MB_OK);
+        //MessageBoxW(nullptr, buffer, L"", MB_OK);
         OutputDebugString(buffer);
     }
 

@@ -6,6 +6,8 @@
 #include "BaseWindow.h"
 #include "MainWindow.h"
 
+#define TIMER_ID 12345
+
 template <class T> void SafeRelease(T** ppT)
 {
     if (*ppT)
@@ -25,6 +27,13 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
             return -1;  // Fail CreateWindowEx.
         }
+
+        // Update timer
+        SetTimer(m_hwnd,             // handle to main window 
+            TIMER_ID,            // timer identifier 
+            150,                 // 10-second interval 
+            (TIMERPROC)NULL);     // no timer callback 
+
         return 0;
 
     case WM_DESTROY:
@@ -32,6 +41,22 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         SafeRelease(&pFactory);
         PostQuitMessage(0);
         return 0;
+
+    case WM_KEYDOWN:
+    {
+        if (!GetKeyState(VK_SPACE))
+        {
+            return 0;
+        }
+        cellGrid.update();
+    }
+
+    case WM_TIMER:
+        switch (wParam)
+        {
+        case TIMER_ID:
+            cellGrid.update();
+        }
 
     case WM_PAINT:
         OnPaint();
@@ -146,17 +171,17 @@ void MainWindow::DrawCellGrid()
         }
     }
 
-    // Draw Grid
-    pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
-    for (int i = 0; i < cellGrid.width + 1; i++)
-    {
-        pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 1);
-    }
+    //// Draw Grid
+    //pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+    //for (int i = 0; i < cellGrid.width + 1; i++)
+    //{
+    //    pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 1);
+    //}
 
-    for (int j = 0; j < cellGrid.height + 1; j++)
-    {
-        pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
-    }
+    //for (int j = 0; j < cellGrid.height + 1; j++)
+    //{
+    //    pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
+    //}
 
 }
 

@@ -1,4 +1,6 @@
 #include <string.h>
+#include <stdlib.h>
+#include <time.h> 
 
 #include "CellGrid.h"
 
@@ -15,15 +17,18 @@ CellGrid::CellGrid(int width, int height)
 	}
 
 	//Debug thing
-	cells[0][0] = true;
+
+	srand(time(NULL));
 
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
 		{
-			cells[i][j] = 0;
+			cells[i][j] = rand() & 1;
 		}
 	}
+
+	cells[0][0] = true;
 
 }
 
@@ -33,7 +38,12 @@ void CellGrid::update()
 	bool** result = new bool* [width];
 	for (int i = 0; i < width; i++)
 	{
-		cells[i] = new bool[height];
+		result[i] = new bool[height];
+
+		for (int j = 0; j < height; j++)
+		{
+			result[i][j] = 0;
+		}
 	}
 
 	for (int i = 0; i < width; i++)
@@ -45,18 +55,24 @@ void CellGrid::update()
 			{
 				if (nCount < 2 || nCount > 3)
 				{
-					result[i][j] == true;
+					result[i][j] = false;
+				}
+				else
+				{
+					result[i][j] = true;
 				}
 			}
-			else
+			else if(cells[i][j] == false)
 			{
 				if (nCount == 3)
 				{
-					result[i][j] == true;
+					result[i][j] = true;
 				}
 			}
 		}
 	}
+
+	cells = result;
 }
 
 int CellGrid::getLiveNeighbors(int row, int col)
@@ -64,10 +80,11 @@ int CellGrid::getLiveNeighbors(int row, int col)
 	int cAlive = 0;
 	for (int i = -1; i <= 1; i++)
 	{
-		if (row + i < 0 || row + i > width) continue;
+		if (row + i < 0 || row + i > width - 1) continue;
+
 		for (int j = -1; j <= 1; j++)
 		{
-			if (col + j < 0 || col + j > height || (i == 0 && j==0)) continue;
+			if ((col + j < 0) || (col + j > height - 1) || (i == 0 && j==0)) continue;
 
 			if (cells[row + i][col + j] == true)
 			{
@@ -75,5 +92,7 @@ int CellGrid::getLiveNeighbors(int row, int col)
 			}
 		}
 	}
+	
+
 	return cAlive;
 }
