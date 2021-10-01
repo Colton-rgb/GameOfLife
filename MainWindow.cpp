@@ -41,7 +41,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_KEYDOWN:
     {
-        if (GetKeyState(0x52))
+        if (GetAsyncKeyState(0x52))
         {
             cellGrid.randomize();
         }
@@ -151,12 +151,10 @@ void MainWindow::DrawCellGrid()
         for (int j = 0; j < cellGrid.height; j++)
         {
             // Create
-            rectangles[i][j] = D2D1::RectF(
-                init_x + cellLength * i,              // Left
-                0 + cellLength * j,                   // Top
-                init_x + cellLength + cellLength * i, //Right
-                cellLength + cellLength * j           // Bottom
-            );
+            rectangles[i][j].left = init_x + cellLength * i;
+            rectangles[i][j].top = 0 + cellLength * j;
+            rectangles[i][j].right = init_x + cellLength + cellLength * i;
+            rectangles[i][j].bottom = cellLength + cellLength * j;
 
             // Color
             if (cellGrid.cells[i][j] == false)
@@ -173,17 +171,17 @@ void MainWindow::DrawCellGrid()
 
         }
     }
-    //// Draw Grid
-    //pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
-    //for (int i = 0; i < cellGrid.width + 1; i++)
-    //{
-    //    pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 1);
-    //}
-
-    //for (int j = 0; j < cellGrid.height + 1; j++)
-    //{
-    //    pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
-    //}
+//    // Draw Grid
+//    pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+//    for (int i = 0; i < cellGrid.width + 1; i++)
+//    {
+//        pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 1);
+//    }
+//
+//    for (int j = 0; j < cellGrid.height + 1; j++)
+//    {
+//        pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
+//    }
 }
 
 void MainWindow::Resize()

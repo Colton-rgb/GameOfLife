@@ -20,48 +20,48 @@ CellGrid::CellGrid(int width, int height)
 		for (int j = 0; j < height; j++)
 		{
 			buffer[i][j] = 0;
+			cells[i][j] = 0;
 		}
-
 	}
 
 }
 
 void CellGrid::update()
 {
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			 buffer[i][j] = cells[i][j];
+		}
+	}
 
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
 		{
 			int nCount = getLiveNeighbors(i, j);
-			if (cells[i][j] == true)
+			if (buffer[i][j] == true)
 			{
 				if (nCount < 2 || nCount > 3)
 				{
-					buffer[i][j] = false;
+					cells[i][j] = false;
 				}
 				else
 				{
-					buffer[i][j] = true;
+					cells[i][j] = true;
 				}
 			}
-			else if(cells[i][j] == false)
+			else if(buffer[i][j] == false)
 			{
 				if (nCount == 3)
 				{
-					buffer[i][j] = true;
+					cells[i][j] = true;
 				}
 			}
 		}
 	}
 
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			cells[i][j] = buffer[i][j];
-		}
-	}
 }
 
 int CellGrid::getLiveNeighbors(int row, int col)
@@ -75,7 +75,7 @@ int CellGrid::getLiveNeighbors(int row, int col)
 		{
 			if ((col + j < 0) || (col + j > height - 1) || (i == 0 && j==0)) continue;
 
-			if (cells[row + i][col + j] == true)
+			if (buffer[row + i][col + j] == true)
 			{
 				cAlive++;
 			}

@@ -3,16 +3,16 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-    CellGrid cellGrid = CellGrid(150, 75);
+    CellGrid cellGrid = CellGrid(75, 50);
 
-    D2D1_SIZE_F size;
-    float cellLength;
-    int init_x;
+    D2D1_SIZE_F size = { 0 };
+    float cellLength = NULL;
+    int init_x = NULL;
 
-    ID2D1Factory          *pFactory;
-    ID2D1HwndRenderTarget *pRenderTarget;
-    ID2D1SolidColorBrush  *pBrush;
-    D2D1_RECT_F          **rectangles;
+    ID2D1Factory          *pFactory = NULL;
+    ID2D1HwndRenderTarget *pRenderTarget = NULL;
+    ID2D1SolidColorBrush  *pBrush = NULL;
+    D2D1_RECT_F          **rectangles = NULL;
 
     void    CalculateLayout();
     HRESULT CreateGraphicsResources();
