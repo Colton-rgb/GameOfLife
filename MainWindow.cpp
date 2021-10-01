@@ -6,7 +6,7 @@
 #include "BaseWindow.h"
 #include "MainWindow.h"
 
-#define TIMER_ID 12345
+#define TIMER_ID 1
 
 template <class T> void SafeRelease(T** ppT)
 {
@@ -22,21 +22,18 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (uMsg)
     {
     case WM_CREATE:
-        if (FAILED(D2D1CreateFactory(
-            D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
+        if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
         {
-            return -1;  // Fail CreateWindowEx.
+            return -1;
         }
 
-        // Update timer
-        SetTimer(m_hwnd,             // handle to main window 
-            TIMER_ID,            // timer identifier 
-            150,                 // 10-second interval 
-            (TIMERPROC)NULL);     // no timer callback 
+        // TIMER
+        SetTimer(m_hwnd, TIMER_ID, 150, (TIMERPROC)NULL);
 
         return 0;
 
     case WM_DESTROY:
+        KillTimer(m_hwnd, TIMER_ID);
         DiscardGraphicsResources();
         SafeRelease(&pFactory);
         PostQuitMessage(0);
@@ -44,6 +41,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_KEYDOWN:
     {
+        if (GetKeyState(0x52))
+        {
+            cellGrid.randomize();
+        }
         if (!GetKeyState(VK_SPACE))
         {
             return 0;
@@ -61,8 +62,6 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         OnPaint();
         return 0;
-
-
 
     case WM_SIZE:
         Resize();
@@ -95,6 +94,7 @@ HRESULT MainWindow::CreateGraphicsResources()
         }
     }
 
+    // Create array of rectangles
     if (rectangles == NULL)
     {
         rectangles = new D2D1_RECT_F * [cellGrid.width];
@@ -111,8 +111,13 @@ void MainWindow::CalculateLayout()
 {
     if (pRenderTarget != NULL)
     {
-        
+        size = pRenderTarget->GetSize();
+
+        cellLength = size.height / cellGrid.height;
+
+        init_x = (size.width - (cellLength * cellGrid.width)) / 2;
     }
+
 }
 
 void MainWindow::OnPaint()
@@ -126,7 +131,6 @@ void MainWindow::OnPaint()
         pRenderTarget->BeginDraw();
 
         pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::DimGray));
-       // pRenderTarget->FillEllipse(ellipse, pBrush);
 
         DrawCellGrid();
 
@@ -141,23 +145,20 @@ void MainWindow::OnPaint()
 
 void MainWindow::DrawCellGrid()
 {
-    D2D1_SIZE_F size = pRenderTarget->GetSize();
-    float cellLength = size.height / cellGrid.height;
-
-    int init_x = (size.width - (cellLength * cellGrid.width)) / 2;
-
 
     for (int i = 0; i < cellGrid.width; i++)
     {
         for (int j = 0; j < cellGrid.height; j++)
         {
+            // Create
             rectangles[i][j] = D2D1::RectF(
-                init_x + cellLength * i, // Left
-                0 + cellLength * j, // Top
+                init_x + cellLength * i,              // Left
+                0 + cellLength * j,                   // Top
                 init_x + cellLength + cellLength * i, //Right
-                cellLength + cellLength * j // Bottom
+                cellLength + cellLength * j           // Bottom
             );
 
+            // Color
             if (cellGrid.cells[i][j] == false)
             {
                 pBrush->SetColor(D2D1::ColorF(0, 0, 0));
@@ -166,11 +167,12 @@ void MainWindow::DrawCellGrid()
             {
                 pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
             }
+
+            // Draw
             pRenderTarget->FillRectangle(rectangles[i][j], pBrush);
 
         }
     }
-
     //// Draw Grid
     //pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
     //for (int i = 0; i < cellGrid.width + 1; i++)
@@ -182,7 +184,6 @@ void MainWindow::DrawCellGrid()
     //{
     //    pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
     //}
-
 }
 
 void MainWindow::Resize()

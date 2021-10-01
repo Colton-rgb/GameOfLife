@@ -3,7 +3,11 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-    CellGrid cellGrid = CellGrid(50, 50);
+    CellGrid cellGrid = CellGrid(575, 300);
+
+    D2D1_SIZE_F size;
+    float cellLength;
+    int init_x;
 
     ID2D1Factory          *pFactory;
     ID2D1HwndRenderTarget *pRenderTarget;
@@ -18,15 +22,9 @@ class MainWindow : public BaseWindow<MainWindow>
 
     void DrawCellGrid();
 
+
 public:
-    MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL)
-    {
-        int a = 16;
-        wchar_t buffer[256];
-        wsprintfW(buffer, L"%d", cellGrid.getLiveNeighbors(0,0));
-        //MessageBoxW(nullptr, buffer, L"", MB_OK);
-        OutputDebugString(buffer);
-    }
+    MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL) { }
 
     PCWSTR  ClassName() const { return L"Main Window Class"; }
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);

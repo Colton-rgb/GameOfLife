@@ -16,6 +16,18 @@ CellGrid::CellGrid(int width, int height)
 		cells[i] = new bool[height];
 	}
 
+
+	buffer = new bool* [width];
+	for (int i = 0; i < width; i++)
+	{
+		buffer[i] = new bool[height];
+
+		for (int j = 0; j < height; j++)
+		{
+			buffer[i][j] = 0;
+		}
+	}
+
 	//Debug thing
 
 	srand(time(NULL));
@@ -34,17 +46,6 @@ CellGrid::CellGrid(int width, int height)
 
 void CellGrid::update()
 {
-	// Result array
-	bool** result = new bool* [width];
-	for (int i = 0; i < width; i++)
-	{
-		result[i] = new bool[height];
-
-		for (int j = 0; j < height; j++)
-		{
-			result[i][j] = 0;
-		}
-	}
 
 	for (int i = 0; i < width; i++)
 	{
@@ -55,24 +56,30 @@ void CellGrid::update()
 			{
 				if (nCount < 2 || nCount > 3)
 				{
-					result[i][j] = false;
+					buffer[i][j] = false;
 				}
 				else
 				{
-					result[i][j] = true;
+					buffer[i][j] = true;
 				}
 			}
 			else if(cells[i][j] == false)
 			{
 				if (nCount == 3)
 				{
-					result[i][j] = true;
+					buffer[i][j] = true;
 				}
 			}
 		}
 	}
 
-	cells = result;
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			cells[i][j] = buffer[i][j];
+		}
+	}
 }
 
 int CellGrid::getLiveNeighbors(int row, int col)
@@ -92,7 +99,15 @@ int CellGrid::getLiveNeighbors(int row, int col)
 			}
 		}
 	}
-	
-
 	return cAlive;
+}
+
+void CellGrid::randomize() {
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			cells[i][j] = rand() & 1;
+		}
+	}
 }
