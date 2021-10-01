@@ -7,7 +7,7 @@ class MainWindow : public BaseWindow<MainWindow>
 
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
-    int init_x = NULL;
+    float init_x = NULL;
 
     ID2D1Factory          *pFactory = NULL;
     ID2D1HwndRenderTarget *pRenderTarget = NULL;
