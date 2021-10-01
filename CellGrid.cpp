@@ -10,37 +10,19 @@ CellGrid::CellGrid(int width, int height)
 	this->height = height;
 
 	cells = new bool* [width];
+	buffer = new bool* [width];
 
 	for (int i = 0; i < width; i++)
 	{
 		cells[i] = new bool[height];
-	}
-
-
-	buffer = new bool* [width];
-	for (int i = 0; i < width; i++)
-	{
 		buffer[i] = new bool[height];
 
 		for (int j = 0; j < height; j++)
 		{
 			buffer[i][j] = 0;
 		}
+
 	}
-
-	//Debug thing
-
-	srand(time(NULL));
-
-	for (int i = 0; i < width; i++)
-	{
-		for (int j = 0; j < height; j++)
-		{
-			cells[i][j] = rand() & 1;
-		}
-	}
-
-	cells[0][0] = true;
 
 }
 

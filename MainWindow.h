@@ -3,7 +3,7 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-    CellGrid cellGrid = CellGrid(575, 300);
+    CellGrid cellGrid = CellGrid(150, 75);
 
     D2D1_SIZE_F size;
     float cellLength;
