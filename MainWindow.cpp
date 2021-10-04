@@ -27,7 +27,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
 
         // TIMER
-        SetTimer(m_hwnd, TIMER_ID, 10, (TIMERPROC)NULL);
+        SetTimer(m_hwnd, TIMER_ID, 100, (TIMERPROC)NULL);
 
         return 0;
 
@@ -53,6 +53,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (GetAsyncKeyState(VK_RIGHT))
         {
             cellGrid.update();
+            OnPaint();
             return 0;
         }
         if (GetKeyState(VK_SPACE))
