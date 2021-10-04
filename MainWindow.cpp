@@ -1,7 +1,6 @@
 #include <windows.h>
 #include <d2d1.h>
 
-
 #include "CellGrid.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
@@ -28,7 +27,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
 
         // TIMER
-        SetTimer(m_hwnd, TIMER_ID, 150, (TIMERPROC)NULL);
+        SetTimer(m_hwnd, TIMER_ID, 10, (TIMERPROC)NULL);
 
         return 0;
 
@@ -44,19 +43,34 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (GetAsyncKeyState(0x52))
         {
             cellGrid.randomize();
-        }
-        if (!GetKeyState(VK_SPACE))
-        {
             return 0;
         }
-        cellGrid.update();
+        if (GetAsyncKeyState(VK_ESCAPE))
+        {
+            SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
+            return 0;
+        }
+        if (GetAsyncKeyState(VK_RIGHT))
+        {
+            cellGrid.update();
+            return 0;
+        }
+        if (GetKeyState(VK_SPACE))
+        {
+            running = !running;
+            return 0;
+        }
+        return 0;
     }
 
     case WM_TIMER:
         switch (wParam)
         {
         case TIMER_ID:
-            cellGrid.update();
+            if (running)
+            {
+                cellGrid.update();
+            }
         }
 
     case WM_PAINT:
@@ -116,8 +130,17 @@ void MainWindow::CalculateLayout()
         cellLength = size.height / cellGrid.height;
 
         init_x = (size.width - (cellLength * cellGrid.width)) / 2;
-    }
 
+        rect_left.left = 0;
+        rect_left.right = init_x;
+        rect_left.top = 0;
+        rect_left.bottom = size.height;
+
+        rect_right.left = size.width - init_x;
+        rect_right.right = size.width;
+        rect_right.top = 0;
+        rect_right.bottom = size.height;
+    }
 }
 
 void MainWindow::OnPaint()
@@ -133,6 +156,10 @@ void MainWindow::OnPaint()
         pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::DimGray));
 
         DrawCellGrid();
+
+        pBrush->SetColor(D2D1::ColorF(0.25f, 0.25f, 0.25f));
+        pRenderTarget->FillRectangle(rect_left, pBrush);
+        pRenderTarget->FillRectangle(rect_right, pBrush);
 
         hr = pRenderTarget->EndDraw();
         if (FAILED(hr) || hr == D2DERR_RECREATE_TARGET)
@@ -152,9 +179,9 @@ void MainWindow::DrawCellGrid()
         {
             // Create
             rectangles[i][j].left = init_x + cellLength * i;
-            rectangles[i][j].top = 0 + cellLength * j;
-            rectangles[i][j].right = init_x + cellLength + cellLength * i;
-            rectangles[i][j].bottom = cellLength + cellLength * j;
+            rectangles[i][j].top = cellLength * j;
+            rectangles[i][j].right = init_x + cellLength + cellLength * i + 1;
+            rectangles[i][j].bottom = cellLength + cellLength * j + 1;
 
             // Color
             if (cellGrid.cells[i][j] == false)
@@ -168,20 +195,19 @@ void MainWindow::DrawCellGrid()
 
             // Draw
             pRenderTarget->FillRectangle(rectangles[i][j], pBrush);
-
         }
     }
-//    // Draw Grid
-//    pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
-//    for (int i = 0; i < cellGrid.width + 1; i++)
-//    {
-//        pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 1);
-//    }
-//
-//    for (int j = 0; j < cellGrid.height + 1; j++)
-//    {
-//        pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 1);
-//    }
+    // Draw Grid
+    /*pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+    for (int i = 0; i < cellGrid.width + 1; i++)
+    {
+        pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 0.5);
+    }
+
+    for (int j = 0; j < cellGrid.height + 1; j++)
+    {
+        pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 0.5);
+    }*/
 }
 
 void MainWindow::Resize()

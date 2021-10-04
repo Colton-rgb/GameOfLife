@@ -24,6 +24,7 @@ CellGrid::CellGrid(int width, int height)
 		}
 	}
 
+	randomize();
 }
 
 void CellGrid::update()

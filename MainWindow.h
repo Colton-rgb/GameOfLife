@@ -1,31 +1,34 @@
 #pragma once
-#include <string>
 
 class MainWindow : public BaseWindow<MainWindow>
 {
-    CellGrid cellGrid = CellGrid(75, 50);
+    bool running = false;
 
+    // CellGird Details
+    CellGrid cellGrid = CellGrid(50, 50);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
     float init_x = NULL;
 
-    ID2D1Factory          *pFactory = NULL;
+    // Direct2D
+    ID2D1Factory *pFactory = NULL;
     ID2D1HwndRenderTarget *pRenderTarget = NULL;
-    ID2D1SolidColorBrush  *pBrush = NULL;
-    D2D1_RECT_F          **rectangles = NULL;
+    ID2D1SolidColorBrush *pBrush = NULL;
 
-    void    CalculateLayout();
+    // Shapes
+    D2D1_RECT_F **rectangles = NULL;
+    D2D1_RECT_F rect_left = { 0 };
+    D2D1_RECT_F rect_right = { 0 };
+
+    void CalculateLayout();
     HRESULT CreateGraphicsResources();
-    void    DiscardGraphicsResources();
-    void    OnPaint();
-    void    Resize();
-
+    void DiscardGraphicsResources();
+    void OnPaint();
+    void Resize();
     void DrawCellGrid();
-
 
 public:
     MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL) { }
-
     PCWSTR  ClassName() const { return L"Main Window Class"; }
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
