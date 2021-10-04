@@ -122,14 +122,11 @@ void MainWindow::DrawCellGrid()
     D2D1_SIZE_F size = pRenderTarget->GetSize();
     float cellLength = size.height / cellGrid.height;
 
-    int init_x = (size.width - (cellLength * cellGrid.width)) / 2;
-
     for (int i = 0; i < cellGrid.width; i++)
     {
         for (int j = 0; j < cellGrid.height; j++)
         {
-
-            rectangles[i][j] = D2D1::RectF(init_x + cellLength*i, 0 + cellLength * j, init_x + cellLength + cellLength*i, cellLength+cellLength*j);
+            rectangles[i][j] = D2D1::RectF(0 + cellLength*i, 0 + cellLength * j, cellLength + cellLength*i, cellLength+cellLength*j);
             if (cellGrid.cells[i][j] == false)
             {
                 pBrush->SetColor(D2D1::ColorF(0, 0, 0));
