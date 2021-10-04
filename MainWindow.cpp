@@ -4,6 +4,7 @@
 #include "CellGrid.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
+#include "resource.h"
 
 #define TIMER_ID 1
 
@@ -40,7 +41,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_KEYDOWN:
     {
-        if (GetAsyncKeyState(0x52))
+        if (GetAsyncKeyState(0x52)) // R key
         {
             cellGrid.randomize();
             return 0;
@@ -81,6 +82,14 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_SIZE:
         Resize();
         return 0;
+
+    case WM_COMMAND:
+        switch (LOWORD(wParam))
+        {
+        case ID_FILE_EXIT:
+            SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
+            return 0;
+        }
     }
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }

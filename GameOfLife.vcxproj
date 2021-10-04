@@ -147,6 +147,10 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="CellGrid.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameOfLife.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
