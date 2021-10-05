@@ -4,9 +4,10 @@ class MainWindow : public BaseWindow<MainWindow>
 {
     HCURSOR hCursor = LoadCursor(NULL, IDC_ARROW);
     bool running = false;
+    bool drawGrid = true;
 
     // CellGird Details
-    CellGrid cellGrid = CellGrid(50, 50);
+    CellGrid cellGrid = CellGrid(100, 75);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
     float init_x = NULL;

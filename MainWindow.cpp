@@ -74,6 +74,16 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             cellGrid.randomize();
             return 0;
         }
+        if (GetAsyncKeyState(0x47)) // G key
+        {
+            drawGrid = !drawGrid;
+            return 0;
+        }
+        if (GetAsyncKeyState(0x43)) // C key
+        {
+            cellGrid.clear();
+            return 0;
+        }
         if (GetAsyncKeyState(VK_ESCAPE))
         {
             SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
@@ -236,16 +246,19 @@ void MainWindow::DrawCellGrid()
         }
     }
     // Draw Grid
-    /*pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
-    for (int i = 0; i < cellGrid.width + 1; i++)
+    if (drawGrid)
     {
-        pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush, 0.5);
-    }
+        pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+        for (int i = 0; i < cellGrid.width + 1; i++)
+        {
+            pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush);
+        }
 
-    for (int j = 0; j < cellGrid.height + 1; j++)
-    {
-        pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush, 0.5);
-    }*/
+        for (int j = 0; j < cellGrid.height + 1; j++)
+        {
+            pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush);
+        }
+    }
 }
 
 void MainWindow::Resize()

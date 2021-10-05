@@ -12,4 +12,5 @@ public:
 	int getLiveNeighbors(int row, int col);
 
 	void randomize();
+	void clear();
 };

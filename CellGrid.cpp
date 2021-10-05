@@ -23,8 +23,6 @@ CellGrid::CellGrid(int width, int height)
 			cells[i][j] = 0;
 		}
 	}
-
-	randomize();
 }
 
 void CellGrid::update()
@@ -91,6 +89,17 @@ void CellGrid::randomize() {
 		for (int j = 0; j < height; j++)
 		{
 			cells[i][j] = rand() & 1;
+		}
+	}
+}
+
+void CellGrid::clear()
+{
+	for (int i = 0; i < width; i++)
+	{
+		for (int j = 0; j < height; j++)
+		{
+			cells[i][j] = 0;
 		}
 	}
 }
