@@ -2,6 +2,7 @@
 
 class MainWindow : public BaseWindow<MainWindow>
 {
+    HCURSOR hCursor = LoadCursor(NULL, IDC_ARROW);
     bool running = false;
 
     // CellGird Details

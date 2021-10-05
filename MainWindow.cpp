@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <d2d1.h>
+#include <WindowsX.h>
 
 #include "CellGrid.h"
 #include "BaseWindow.h"
@@ -22,22 +23,49 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (uMsg)
     {
     case WM_CREATE:
+    {
         if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &pFactory)))
         {
             return -1;
         }
 
+        SetCursor(hCursor);
+
         // TIMER
         SetTimer(m_hwnd, TIMER_ID, 100, (TIMERPROC)NULL);
 
         return 0;
-
+    }
+    case WM_SETCURSOR:
+        if (LOWORD(lParam) == HTCLIENT)
+        {
+            SetCursor(hCursor);
+        }
+        return 0;
     case WM_DESTROY:
         KillTimer(m_hwnd, TIMER_ID);
         DiscardGraphicsResources();
         SafeRelease(&pFactory);
         PostQuitMessage(0);
         return 0;
+
+    case WM_LBUTTONDOWN: {
+        if (running == false)
+        {
+            int xPos = GET_X_LPARAM(lParam);
+            int yPos = GET_Y_LPARAM(lParam);
+
+            int gridX = (int)((xPos - (int)init_x) / cellLength);
+            int gridY = (int)(yPos / cellLength);
+
+            // Check bounds
+            if (gridX < 0 || gridX > cellGrid.width || gridY < 0 || gridY > cellGrid.height) return 0;
+
+            // apply change to grid
+            cellGrid.cells[gridX][gridY] = !cellGrid.cells[gridX][gridY];
+        }
+        return 0;
+    }
 
     case WM_KEYDOWN:
     {
