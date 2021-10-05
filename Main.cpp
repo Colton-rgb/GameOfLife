@@ -17,7 +17,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 {
     MainWindow win;
 
-    if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW, MAKEINTRESOURCE(IDR_MENU1)))
+    if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW))
     {
         return 0;
     }
