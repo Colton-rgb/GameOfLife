@@ -7,7 +7,7 @@ class MainWindow : public BaseWindow<MainWindow>
     bool drawGrid = true;
 
     // CellGird Details
-    CellGrid cellGrid = CellGrid(100, 75);
+    CellGrid cellGrid = CellGrid(75, 50);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
     float init_x = NULL;
