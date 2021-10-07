@@ -22,6 +22,9 @@ class MainWindow : public BaseWindow<MainWindow>
     D2D1_RECT_F rect_left = { 0 };
     D2D1_RECT_F rect_right = { 0 };
 
+    // Toolbar
+    HWND hToolbar = 0;
+
     void CalculateLayout();
     HRESULT CreateGraphicsResources();
     void DiscardGraphicsResources();

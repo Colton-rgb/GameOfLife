@@ -5,7 +5,7 @@
 #include "CellGrid.h"
 #include "BaseWindow.h"
 #include "MainWindow.h"
-#include "resource.h"
+#include "Toolbar.h"
 
 #define TIMER_ID 1
 
@@ -33,6 +33,10 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         // TIMER
         SetTimer(m_hwnd, TIMER_ID, 100, (TIMERPROC)NULL);
+
+        // Toolbar
+
+        hToolbar = CreateSimpleToolbar(m_hwnd);
 
         return 0;
     }
@@ -132,9 +136,9 @@ HRESULT MainWindow::CreateGraphicsResources()
         RECT rc;
         GetClientRect(m_hwnd, &rc);
 
-        D2D1_SIZE_U size = D2D1::SizeU(rc.right, rc.bottom);
+        D2D1_SIZE_U sizeU = D2D1::SizeU(rc.right, rc.bottom);
 
-        hr = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(m_hwnd, size), &pRenderTarget);
+        hr = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(m_hwnd, sizeU), &pRenderTarget);
 
         if (SUCCEEDED(hr))
         {
