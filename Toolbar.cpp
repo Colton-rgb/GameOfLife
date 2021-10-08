@@ -17,27 +17,21 @@ HWND CreateSimpleToolbar(HWND hWndParent)
     const DWORD buttonStyles = BTNS_AUTOSIZE;
 
     // Create the toolbar.
-    HWND hWndToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL,
-        WS_CHILD | TBSTYLE_WRAPABLE, 0, 0, 0, 0,
-        hWndParent, NULL, g_hInst, NULL);
+    HWND hWndToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | TBSTYLE_WRAPABLE, 0, 0, 0, 0, hWndParent, NULL, g_hInst, NULL);
 
     if (hWndToolbar == NULL)
+    {
         return NULL;
+    }
 
     // Create the image list.
-    g_hImageList = ImageList_Create(bitmapSize, bitmapSize,   // Dimensions of individual bitmaps.
-        ILC_COLOR16 | ILC_MASK,   // Ensures transparent background.
-        numButtons, 0);
+    g_hImageList = ImageList_Create(bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, numButtons, 0); // Dimensions of individual bitmaps. // Ensures transparent background.
 
     // Set the image list.
-    SendMessage(hWndToolbar, TB_SETIMAGELIST,
-        (WPARAM)ImageListID,
-        (LPARAM)g_hImageList);
+    SendMessage(hWndToolbar, TB_SETIMAGELIST, (WPARAM)ImageListID, (LPARAM)g_hImageList);
 
     // Load the button images.
-    SendMessage(hWndToolbar, TB_LOADIMAGES,
-        (WPARAM)IDB_STD_SMALL_COLOR,
-        (LPARAM)HINST_COMMCTRL);
+    SendMessage(hWndToolbar, TB_LOADIMAGES, (WPARAM)IDB_STD_SMALL_COLOR, (LPARAM)HINST_COMMCTRL);
 
     // Initialize button info.
     // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
