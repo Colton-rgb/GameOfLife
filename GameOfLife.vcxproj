@@ -141,13 +141,13 @@
   <ItemGroup>
     <ClCompile Include="CellGrid.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="GridWindow.cpp" />
     <ClCompile Include="Toolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="CellGrid.h" />
-    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="GridWindow.h" />
     <ClInclude Include="Toolbar.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

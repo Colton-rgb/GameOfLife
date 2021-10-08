@@ -18,7 +18,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MainWindow.cpp">
+    <ClCompile Include="GridWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CellGrid.cpp">
@@ -32,7 +32,7 @@
     <ClInclude Include="BaseWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MainWindow.h">
+    <ClInclude Include="GridWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CellGrid.h">

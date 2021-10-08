@@ -1,6 +1,6 @@
 #pragma once
 
-class MainWindow : public BaseWindow<MainWindow>
+class GridWindow : public BaseWindow<GridWindow>
 {
     HCURSOR hCursor = LoadCursor(NULL, IDC_ARROW);
     bool running = false;
@@ -33,7 +33,7 @@ class MainWindow : public BaseWindow<MainWindow>
     void DrawCellGrid();
 
 public:
-    MainWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL) { }
+    GridWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL) { }
     PCWSTR  ClassName() const { return L"Main Window Class"; }
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };

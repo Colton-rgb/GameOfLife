@@ -10,11 +10,11 @@
 
 #include "BaseWindow.h"
 #include "CellGrid.h"
-#include "MainWindow.h"
+#include "GridWindow.h"
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
-    MainWindow win;
+    GridWindow win;
 
     if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW| WS_CLIPCHILDREN))
     {

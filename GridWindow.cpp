@@ -4,7 +4,7 @@
 
 #include "CellGrid.h"
 #include "BaseWindow.h"
-#include "MainWindow.h"
+#include "GridWindow.h"
 #include "Toolbar.h"
 
 #define TIMER_ID 1
@@ -18,7 +18,7 @@ template <class T> void SafeRelease(T** ppT)
     }
 }
 
-LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
@@ -128,7 +128,7 @@ LRESULT MainWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
 
-HRESULT MainWindow::CreateGraphicsResources()
+HRESULT GridWindow::CreateGraphicsResources()
 {
     HRESULT hr = S_OK;
     if (pRenderTarget == NULL)
@@ -165,7 +165,7 @@ HRESULT MainWindow::CreateGraphicsResources()
     return hr;
 }
 
-void MainWindow::CalculateLayout()
+void GridWindow::CalculateLayout()
 {
     if (pRenderTarget != NULL)
     {
@@ -187,7 +187,7 @@ void MainWindow::CalculateLayout()
     }
 }
 
-void MainWindow::OnPaint()
+void GridWindow::OnPaint()
 {
     HRESULT hr = CreateGraphicsResources();
     if (SUCCEEDED(hr))
@@ -214,7 +214,7 @@ void MainWindow::OnPaint()
     }
 }
 
-void MainWindow::DrawCellGrid()
+void GridWindow::DrawCellGrid()
 {
 
     for (int i = 0; i < cellGrid.width; i++)
@@ -257,7 +257,7 @@ void MainWindow::DrawCellGrid()
     }
 }
 
-void MainWindow::Resize()
+void GridWindow::Resize()
 {
     if (pRenderTarget != NULL)
     {
@@ -272,7 +272,7 @@ void MainWindow::Resize()
     }
 }
 
-void MainWindow::DiscardGraphicsResources()
+void GridWindow::DiscardGraphicsResources()
 {
     SafeRelease(&pRenderTarget);
     SafeRelease(&pBrush);
