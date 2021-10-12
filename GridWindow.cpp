@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <d2d1.h>
 #include <WindowsX.h>
+#include <CommCtrl.h>
 
 #include "CellGrid.h"
 #include "BaseWindow.h"
@@ -34,8 +35,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         // TIMER
         SetTimer(m_hwnd, TIMER_ID, 100, (TIMERPROC)NULL);
 
-        // Toolbar
-
+        // TOOLBAR
         hToolbar = CreateSimpleToolbar(m_hwnd);
 
         return 0;
@@ -60,7 +60,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             int yPos = GET_Y_LPARAM(lParam);
 
             int gridX = (int)((xPos - (int)init_x) / cellLength);
-            int gridY = (int)(yPos / cellLength);
+            int gridY = (int)((yPos - (int)init_y) / cellLength);
 
             // Check bounds
             if (gridX < 0 || gridX > cellGrid.width || gridY < 0 || gridY > cellGrid.height) return 0;
@@ -123,6 +123,10 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_SIZE:
         Resize();
+
+        // Resize the toolbar
+        SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
+        
         return 0;
     }
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
@@ -170,8 +174,12 @@ void GridWindow::CalculateLayout()
     if (pRenderTarget != NULL)
     {
         size = pRenderTarget->GetSize();
+        tbRect = { 0 };
+        GetWindowRect(hToolbar, &tbRect);
 
-        cellLength = size.height / cellGrid.height;
+        init_y = tbRect.bottom - tbRect.top;
+
+        cellLength = (size.height - init_y) / cellGrid.height;
 
         init_x = (size.width - (cellLength * cellGrid.width)) / 2;
 
@@ -223,9 +231,9 @@ void GridWindow::DrawCellGrid()
         {
             // Create
             rectangles[i][j].left = init_x + cellLength * i;
-            rectangles[i][j].top = cellLength * j;
+            rectangles[i][j].top = init_y +cellLength * j;
             rectangles[i][j].right = init_x + cellLength + cellLength * i + 1;
-            rectangles[i][j].bottom = cellLength + cellLength * j + 1;
+            rectangles[i][j].bottom = init_y + cellLength + cellLength * j + 1;
 
             // Color
             if (cellGrid.cells[i][j] == false)
@@ -247,12 +255,12 @@ void GridWindow::DrawCellGrid()
         pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
         for (int i = 0; i < cellGrid.width + 1; i++)
         {
-            pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, 0), D2D1::Point2F(init_x + cellLength * i, size.height), pBrush);
+            pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, init_y), D2D1::Point2F(init_x + cellLength * i, init_y + size.height), pBrush);
         }
 
         for (int j = 0; j < cellGrid.height + 1; j++)
         {
-            pRenderTarget->DrawLine(D2D1::Point2F(init_x, cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), cellLength * j), pBrush);
+            pRenderTarget->DrawLine(D2D1::Point2F(init_x, init_y + cellLength * j), D2D1::Point2F(init_x + cellLength * (cellGrid.width), init_y + cellLength * j), pBrush);
         }
     }
 }

@@ -10,7 +10,8 @@ class GridWindow : public BaseWindow<GridWindow>
     CellGrid cellGrid = CellGrid(75, 50);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
-    float init_x = NULL;
+    float init_x = 0;
+    float init_y = 0;
 
     // Direct2D
     ID2D1Factory *pFactory = NULL;
@@ -24,6 +25,7 @@ class GridWindow : public BaseWindow<GridWindow>
 
     // Toolbar
     HWND hToolbar = 0;
+    RECT tbRect = { 0 };
 
     void CalculateLayout();
     HRESULT CreateGraphicsResources();
