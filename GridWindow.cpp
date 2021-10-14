@@ -107,6 +107,18 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         return 0;
     }
 
+    case WM_COMMAND:
+    {
+        switch (LOWORD(wParam))
+        {
+        case ID_TBRUN:
+            running = !running;
+            SendMessage(hToolbar, TB_MARKBUTTON, ID)
+            return 0;
+        }
+    }
+    return 0;
+
     case WM_TIMER:
         switch (wParam)
         {

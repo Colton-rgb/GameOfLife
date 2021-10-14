@@ -1,8 +1,9 @@
 #include <windows.h>
 #include <CommCtrl.h>
 
-HIMAGELIST g_hImageList = NULL;
+#include "Toolbar.h"
 
+HIMAGELIST g_hImageList = NULL;
 HINSTANCE g_hInst = NULL;
 
 HWND CreateSimpleToolbar(HWND hWndParent)
@@ -25,7 +26,8 @@ HWND CreateSimpleToolbar(HWND hWndParent)
     }
 
     // Create the image list.
-    g_hImageList = ImageList_Create(bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, numButtons, 0); // Dimensions of individual bitmaps. // Ensures transparent background.
+    // Dimensions of individual bitmaps. // Ensures transparent background.
+    g_hImageList = ImageList_Create(bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, numButtons, 0);
 
     // Set the image list.
     SendMessage(hWndToolbar, TB_SETIMAGELIST, (WPARAM)ImageListID, (LPARAM)g_hImageList);
@@ -38,9 +40,9 @@ HWND CreateSimpleToolbar(HWND hWndParent)
 
     TBBUTTON tbButtons[numButtons] =
     {
-        { MAKELONG(STD_FILENEW,  ImageListID), 1,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"New" },
+        { MAKELONG(I_IMAGENONE,  ImageListID), ID_TBRUN, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Run" },
         { MAKELONG(STD_FILEOPEN, ImageListID), 2, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Open"},
-        { MAKELONG(STD_FILESAVE, ImageListID), 3, 0,               buttonStyles, {0}, 0, (INT_PTR)L"Save"}
+        { MAKELONG(STD_FILESAVE, ImageListID), 3, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Save"}
     };
 
     // Add buttons.
