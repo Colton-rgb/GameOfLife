@@ -1,3 +1,5 @@
+#pragma once
+
 #include <windows.h>
 
 #define ID_TBRUN 1

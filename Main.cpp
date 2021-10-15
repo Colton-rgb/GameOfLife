@@ -24,8 +24,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
     ShowWindow(win.Window(), nCmdShow);
 
-    // Run the message loop.
-
+    // Run the message loop
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0))
     {
