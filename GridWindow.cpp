@@ -102,6 +102,10 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (GetKeyState(VK_SPACE))
         {
             running = !running;
+            if (running)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
             return 0;
         }
         return 0;
@@ -113,7 +117,10 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         {
         case ID_TBRUN:
             running = !running;
-            SendMessage(hToolbar, TB_MARKBUTTON, ID)
+            if(running)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
             return 0;
         }
     }
