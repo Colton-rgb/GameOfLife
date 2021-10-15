@@ -228,7 +228,7 @@ void GridWindow::OnPaint()
 
         DrawCellGrid();
 
-        pBrush->SetColor(D2D1::ColorF(0.25f, 0.25f, 0.25f));
+        pBrush->SetColor(D2D1::ColorF(0.15f, 0.15f, 0.15f));
         pRenderTarget->FillRectangle(rect_left, pBrush);
         pRenderTarget->FillRectangle(rect_right, pBrush);
 

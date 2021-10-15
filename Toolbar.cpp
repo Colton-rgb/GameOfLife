@@ -41,7 +41,7 @@ HWND CreateSimpleToolbar(HWND hWndParent)
     TBBUTTON tbButtons[numButtons] =
     {
         { MAKELONG(I_IMAGENONE,  ImageListID), ID_TBRUN, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Run" },
-        { MAKELONG(STD_FILEOPEN, ImageListID), 2, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Open"},
+        { MAKELONG(I_IMAGENONE, ImageListID), 2, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Grid"},
         { MAKELONG(STD_FILESAVE, ImageListID), 3, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Save"}
     };
 

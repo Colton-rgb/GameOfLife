@@ -6,9 +6,14 @@
 
 CellGrid::CellGrid(int width, int height)
 {
-	this->width =  width;
+	this->width = width;
 	this->height = height;
 
+	generate(width, height);
+}
+
+void CellGrid::generate(int width, int height)
+{
 	cells = new bool* [width];
 	buffer = new bool* [width];
 
