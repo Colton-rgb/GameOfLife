@@ -63,7 +63,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             int gridY = (int)((yPos - (int)init_y) / cellLength);
 
             // Check bounds
-            if (gridX < 0 || gridX > cellGrid.width || gridY < 0 || gridY > cellGrid.height) return 0;
+            if (gridX < 0 || gridX > cellGrid.width - 1 || gridY < 0 || gridY > cellGrid.height - 1) return 0;
 
             // apply change to grid
             cellGrid.cells[gridX][gridY] = !cellGrid.cells[gridX][gridY];
@@ -81,6 +81,10 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (GetAsyncKeyState(0x47)) // G key
         {
             drawGrid = !drawGrid;
+            if (drawGrid)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
             return 0;
         }
         if (GetAsyncKeyState(0x43)) // C key
@@ -121,6 +125,13 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
             else
                 SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
+            return 0;
+        case ID_TBGRID:
+            drawGrid = !drawGrid;
+            if (drawGrid)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
             return 0;
         }
     }
