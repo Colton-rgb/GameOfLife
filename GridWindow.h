@@ -35,7 +35,10 @@ class GridWindow : public BaseWindow<GridWindow>
     void DrawCellGrid();
 
 public:
-    GridWindow() : pFactory(NULL), pRenderTarget(NULL), pBrush(NULL) { }
-    PCWSTR  ClassName() const { return L"Main Window Class"; }
+    PCWSTR  ClassName() const
+    {
+        return L"Main Window Class";
+    }
+
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };

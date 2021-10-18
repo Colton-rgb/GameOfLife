@@ -1,3 +1,5 @@
+#include <string>
+
 class CellGrid
 {
 
@@ -14,4 +16,7 @@ public:
 	void generate(int width, int height);
 	void randomize();
 	void clear();
+
+	void save(std::string file);
+	void load(std::string file);
 };

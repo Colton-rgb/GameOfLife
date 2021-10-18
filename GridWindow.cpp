@@ -92,6 +92,16 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             cellGrid.clear();
             return 0;
         }
+        if (GetAsyncKeyState('S')) // C key
+        {
+            cellGrid.save("test.txt");
+            return 0;
+        }
+        if (GetAsyncKeyState('L')) // C key
+        {
+            cellGrid.load("test.txt");
+            return 0;
+        }
         if (GetAsyncKeyState(VK_ESCAPE))
         {
             SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
