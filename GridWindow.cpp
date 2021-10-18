@@ -94,12 +94,12 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         if (GetAsyncKeyState('S')) // C key
         {
-            cellGrid.save("test.txt");
+            cellGrid.save("quick_save.txt");
             return 0;
         }
         if (GetAsyncKeyState('L')) // C key
         {
-            cellGrid.load("test.txt");
+            cellGrid.load("quick_save.txt");
             return 0;
         }
         if (GetAsyncKeyState(VK_ESCAPE))

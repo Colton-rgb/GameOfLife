@@ -124,7 +124,7 @@ void CellGrid::save(std::string file)
 	{
 		for (int j = 0; j < height; j++)
 		{
-			outdata << cells[i][j] << " ";
+			outdata << cells[i][j] << ' ';
 		}
 		outdata << '\n';
 	}
