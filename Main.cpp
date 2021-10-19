@@ -4,6 +4,7 @@
 
 #include <windows.h>
 #include <d2d1.h>
+#include <Shobjidl.h>
 
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "Comctl32")
@@ -15,6 +16,15 @@
 // Must be using windows subsystem
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
 {
+
+    // COM
+    if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE) != 0)
+    {
+        return 0;
+    }
+
+
+
     GridWindow win;
 
     if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW| WS_CLIPCHILDREN))
@@ -32,5 +42,6 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
         DispatchMessage(&msg);
     }
 
+    CoUninitialize();
     return 0;
 }

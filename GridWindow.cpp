@@ -2,6 +2,7 @@
 #include <d2d1.h>
 #include <WindowsX.h>
 #include <CommCtrl.h>
+#include <Shobjidl.h>
 
 #include "CellGrid.h"
 #include "BaseWindow.h"
@@ -10,7 +11,8 @@
 
 #define TIMER_ID 1
 
-template <class T> void SafeRelease(T** ppT)
+template <class T>
+void SafeRelease(T** ppT)
 {
     if (*ppT)
     {
@@ -33,10 +35,10 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         SetCursor(hCursor);
 
         // TIMER
-        SetTimer(m_hwnd, TIMER_ID, 100, (TIMERPROC)NULL);
+        SetTimer(m_hwnd, TIMER_ID, 75, (TIMERPROC)NULL);
 
         // TOOLBAR
-        hToolbar = CreateSimpleToolbar(m_hwnd);
+        hToolbar = CreateToolbar(m_hwnd);
 
         return 0;
     }
@@ -94,12 +96,88 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         if (GetAsyncKeyState('S')) // C key
         {
-            cellGrid.save("quick_save.txt");
+            IFileSaveDialog* pFileSave;
+
+            // Create the FileSaveDialog object.
+            HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+                IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+
+            // Add txt filter
+            COMDLG_FILTERSPEC testFilter = { };
+            testFilter.pszName = L"Text Document";
+            testFilter.pszSpec = L"*.txt";
+            pFileSave->SetFileTypes(1, &testFilter);
+
+            if (SUCCEEDED(hr))
+            {
+                hr = pFileSave->Show(NULL);
+
+                // Get the file name from the dialog box.
+                if (SUCCEEDED(hr))
+                {
+                    IShellItem* pItem;
+                    hr = pFileSave->GetResult(&pItem);
+                    if (SUCCEEDED(hr))
+                    {
+                        PWSTR pszFilePath;
+                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+                        if (SUCCEEDED(hr))
+                        {
+
+                            std::wstring ws(pszFilePath);
+                            std::string filePath(ws.begin(), ws.end());
+
+                            cellGrid.save(filePath);
+
+                            // MessageBoxW(NULL, pszFilePath, L"File Path", MB_OK);
+                            CoTaskMemFree(pszFilePath);
+                        }
+                        pItem->Release();
+                    }
+                }
+                pFileSave->Release();
+            }
+
             return 0;
         }
         if (GetAsyncKeyState('L')) // C key
         {
-            cellGrid.load("quick_save.txt");
+            IFileSaveDialog* pFileOpen;
+
+            // Create the FileOpenDialog object.
+            HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+                IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+            if (SUCCEEDED(hr))
+            {
+                hr = pFileOpen->Show(NULL);
+
+                // Get the file name from the dialog box.
+                if (SUCCEEDED(hr))
+                {
+                    IShellItem* pItem;
+                    hr = pFileOpen->GetResult(&pItem);
+                    if (SUCCEEDED(hr))
+                    {
+                        PWSTR pszFilePath;
+                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                        if (SUCCEEDED(hr))
+                        {
+
+                            std::wstring ws(pszFilePath);
+                            std::string filePath(ws.begin(), ws.end());
+
+                            cellGrid.load(filePath);
+
+                            CoTaskMemFree(pszFilePath);
+                        }
+                        pItem->Release();
+                    }
+                }
+                pFileOpen->Release();
+            }
+
             return 0;
         }
         if (GetAsyncKeyState(VK_ESCAPE))

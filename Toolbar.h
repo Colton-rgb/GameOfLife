@@ -7,4 +7,4 @@
 #define ID_TBOPEN 3
 #define ID_TBSAVE 4
 
-HWND CreateSimpleToolbar(HWND hWndParent);
+HWND CreateToolbar(HWND hWndParent);

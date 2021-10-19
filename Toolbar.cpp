@@ -6,7 +6,7 @@
 HIMAGELIST g_hImageList = NULL;
 HINSTANCE g_hInst = NULL;
 
-HWND CreateSimpleToolbar(HWND hWndParent)
+HWND CreateToolbar(HWND hWndParent)
 {
     g_hInst = GetModuleHandle(NULL);
 
