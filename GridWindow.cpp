@@ -102,6 +102,9 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         if (GetAsyncKeyState('L')) // L key
         {
             cellGrid.load("quick_save.txt");
+
+            SendMessage(Window(), WM_SIZE, 0, 0);
+
             return 0;
         }
         if (GetAsyncKeyState(VK_ESCAPE))
@@ -217,7 +220,9 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                             std::wstring ws(pszFilePath);
                             std::string filePath(ws.begin(), ws.end());
 
-                            cellGrid.load(filePath);
+                            load_grid(filePath);
+
+                            SendMessage(Window(), WM_SIZE, 0, 0);
 
                             CoTaskMemFree(pszFilePath);
                         }
@@ -403,6 +408,23 @@ void GridWindow::Resize()
         pRenderTarget->Resize(size);
         CalculateLayout();
         InvalidateRect(m_hwnd, NULL, FALSE);
+    }
+}
+
+void GridWindow::load_grid(std::string file)
+{
+    for (int i = 0; i < cellGrid.width; i++)
+    {
+        free(rectangles[i]);
+    }
+    free(rectangles);
+
+    cellGrid.load(file);
+
+    rectangles = new D2D1_RECT_F * [cellGrid.width];
+    for (int i = 0; i < cellGrid.width; i++)
+    {
+        rectangles[i] = new D2D1_RECT_F[cellGrid.height];
     }
 }
 

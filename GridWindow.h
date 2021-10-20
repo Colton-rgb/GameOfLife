@@ -7,7 +7,7 @@ class GridWindow : public BaseWindow<GridWindow>
     bool drawGrid = false;
 
     // CellGird Details
-    CellGrid cellGrid = CellGrid(125, 75);
+    CellGrid cellGrid = CellGrid(25, 25);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
     float init_x = 0;
@@ -33,6 +33,8 @@ class GridWindow : public BaseWindow<GridWindow>
     void OnPaint();
     void Resize();
     void DrawCellGrid();
+
+    void load_grid(std::string file);
 
 public:
     PCWSTR  ClassName() const
