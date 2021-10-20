@@ -94,7 +94,57 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             cellGrid.clear();
             return 0;
         }
-        if (GetAsyncKeyState('S')) // C key
+        if (GetAsyncKeyState('S')) // S key
+        {
+            cellGrid.save("quick_save.txt");
+            return 0;
+        }
+        if (GetAsyncKeyState('L')) // L key
+        {
+            cellGrid.load("quick_save.txt");
+            return 0;
+        }
+        if (GetAsyncKeyState(VK_ESCAPE))
+        {
+            SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
+            return 0;
+        }
+        if (GetAsyncKeyState(VK_RIGHT))
+        {
+            cellGrid.update();
+            OnPaint();
+            return 0;
+        }
+        if (GetKeyState(VK_SPACE))
+        {
+            running = !running;
+            if (running)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
+            return 0;
+        }
+        return 0;
+    }
+    case WM_COMMAND:
+    {
+        switch (LOWORD(wParam))
+        {
+        case ID_TBRUN:
+            running = !running;
+            if(running)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
+            return 0;
+        case ID_TBGRID:
+            drawGrid = !drawGrid;
+            if (drawGrid)
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
+            else
+                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
+            return 0;
+        case ID_TBSAVE:
         {
             IFileSaveDialog* pFileSave;
 
@@ -137,10 +187,9 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 }
                 pFileSave->Release();
             }
-
             return 0;
         }
-        if (GetAsyncKeyState('L')) // C key
+        case ID_TBOPEN:
         {
             IFileSaveDialog* pFileOpen;
 
@@ -180,47 +229,6 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
             return 0;
         }
-        if (GetAsyncKeyState(VK_ESCAPE))
-        {
-            SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
-            return 0;
-        }
-        if (GetAsyncKeyState(VK_RIGHT))
-        {
-            cellGrid.update();
-            OnPaint();
-            return 0;
-        }
-        if (GetKeyState(VK_SPACE))
-        {
-            running = !running;
-            if (running)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
-            return 0;
-        }
-        return 0;
-    }
-
-    case WM_COMMAND:
-    {
-        switch (LOWORD(wParam))
-        {
-        case ID_TBRUN:
-            running = !running;
-            if(running)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
-            return 0;
-        case ID_TBGRID:
-            drawGrid = !drawGrid;
-            if (drawGrid)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
-            return 0;
         }
     }
     return 0;
