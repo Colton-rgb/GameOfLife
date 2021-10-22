@@ -7,7 +7,7 @@ class GridWindow : public BaseWindow<GridWindow>
     bool drawGrid = false;
 
     // CellGird Details
-    CellGrid cellGrid = CellGrid(125, 75);
+    CellGrid cellGrid = CellGrid(100, 50);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
     float init_x = 0;

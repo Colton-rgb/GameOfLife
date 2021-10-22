@@ -65,8 +65,17 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
     RegisterClass(&inWndClass);
 
-    HWND hEditWind = CreateWindowEx(0, editClassName, L"Edit Window", WS_OVERLAPPEDWINDOW ^ WS_THICKFRAME, CW_USEDEFAULT, CW_USEDEFAULT, 300, 200, win.Window(), 0, hInstance, 0);
-    CreateWindow(L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE, 56, 100, 50, 18, hEditWind, 0, hInstance, 0);
+    HWND hEditWind = CreateWindowEx(0, editClassName, L"Edit Grid", WS_OVERLAPPED ^ WS_THICKFRAME ^ WS_SYSMENU, 200, 200, 230, 125, win.Window(), 0, hInstance, 0);
+
+    CreateWindowEx(0, L"STATIC", L"Resize Grid", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 10, 80, 18, hEditWind, 0, hInstance, 0);
+
+    CreateWindowEx(0, L"STATIC", L"WIDTH: ", WS_VISIBLE | WS_CHILD | SS_LEFT,  10, 35, 65, 18, hEditWind, 0, hInstance, 0);
+
+    CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT, 75, 35, 100, 18, hEditWind, 0, hInstance, 0);
+
+    CreateWindowEx(0, L"STATIC", L"HEIGHT: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 55, 65, 18, hEditWind, 0, hInstance, 0);
+
+    CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT, 75, 55, 100, 18, hEditWind, 0, hInstance, 0);
 
     ShowWindow(hEditWind, nCmdShow);
 
