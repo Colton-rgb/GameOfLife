@@ -65,7 +65,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
     RegisterClass(&inWndClass);
 
-    HWND hEditWind = CreateWindowEx(0, editClassName, L"Edit Grid", WS_OVERLAPPED ^ WS_THICKFRAME ^ WS_SYSMENU, 200, 200, 230, 125, win.Window(), 0, hInstance, 0);
+    HWND hEditWind = CreateWindowEx(0, editClassName, L"Edit Grid", WS_OVERLAPPED ^ WS_SYSMENU, 200, 200, 230, 125, win.Window(), 0, hInstance, 0);
 
     CreateWindowEx(0, L"STATIC", L"Resize Grid", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 10, 80, 18, hEditWind, 0, hInstance, 0);
 
