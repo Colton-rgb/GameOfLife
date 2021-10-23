@@ -1,14 +1,17 @@
 #include <windows.h>
+#include <string.h>
 
+#include "EditGridWindow.h"
 #include "CellGrid.h"
 
 HWND CreateEditGridWindow(CellGrid cg)
 {
+    HINSTANCE hInstance = GetModuleHandle(0);
     const wchar_t editClassName[] = L"Input Test Class";
 
     WNDCLASS inWndClass = { };
     inWndClass.lpfnWndProc = EditGridPrc;
-    inWndClass.hInstance = GetModuleHandle(0);
+    inWndClass.hInstance = hInstance;
     inWndClass.lpszClassName = editClassName;
 
     RegisterClass(&inWndClass);
@@ -26,6 +29,8 @@ HWND CreateEditGridWindow(CellGrid cg)
     CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT, 75, 55, 100, 18, hEditWind, 0, hInstance, 0);
 
     ShowWindow(hEditWind, 1);
+
+    return hEditWind;
 }
 
 LRESULT CALLBACK EditGridPrc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
