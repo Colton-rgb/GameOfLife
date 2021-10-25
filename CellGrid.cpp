@@ -16,8 +16,22 @@ CellGrid::CellGrid(int width, int height)
 	generate(width, height);
 }
 
-void CellGrid::generate(int width, int height)
+void CellGrid::generate(int newWidth, int newHeight)
 {
+	if (cells && buffer)
+	{
+		for (int i = 0; i < width; i++)
+		{
+			delete[] cells[i];
+			delete[] buffer[i];
+		}
+		delete[] cells;
+		delete[] buffer;
+	}
+
+	width = newWidth;
+	height = newHeight;
+
 	cells = new bool* [width];
 	buffer = new bool* [width];
 
@@ -69,7 +83,6 @@ void CellGrid::update()
 			}
 		}
 	}
-
 }
 
 int CellGrid::getLiveNeighbors(int row, int col)
@@ -137,10 +150,13 @@ void CellGrid::load(std::string file)
 	ifstream indata;
 	indata.open(file);
 
-	indata >> width;
-	indata >> height;
+	int newWidth = 0;
+	int newHeight = 0;
 
-	generate(width, height);
+	indata >> newWidth;
+	indata >> newHeight;
+
+	generate(newWidth, newHeight);
 
 	for (int i = 0; i < width; i++)
 	{

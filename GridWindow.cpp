@@ -101,7 +101,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         if (GetAsyncKeyState('L')) // L key
         {
-            cellGrid.load("quick_save.txt");
+            load_grid("quick_save.txt");
 
             SendMessage(Window(), WM_SIZE, 0, 0);
 
@@ -415,9 +415,9 @@ void GridWindow::load_grid(std::string file)
 {
     for (int i = 0; i < cellGrid.width; i++)
     {
-        free(rectangles[i]);
+        delete[] rectangles[i];
     }
-    free(rectangles);
+    delete[] rectangles;
 
     cellGrid.load(file);
 

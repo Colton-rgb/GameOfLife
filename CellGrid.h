@@ -9,6 +9,7 @@ public:
 	bool** buffer;
 	int width;
 	int height;
+
 	CellGrid(int width, int height);
 
 	void update();
