@@ -10,9 +10,9 @@
 #pragma comment(lib, "Comctl32")
 
 #include "BaseWindow.h"
+#include "EditGridWindow.h"
 #include "CellGrid.h"
 #include "GridWindow.h"
-#include "EditGridWindow.h"
 
 
 // Must be using windows subsystem

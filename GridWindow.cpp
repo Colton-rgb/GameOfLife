@@ -110,7 +110,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         if (GetAsyncKeyState('E'))
         {
-            CreateEditGridWindow(cellGrid, m_hwnd);
+            CreateEditGridWindow(&cellGrid, m_hwnd);
         }
         if (GetAsyncKeyState(VK_ESCAPE))
         {
@@ -416,21 +416,26 @@ void GridWindow::Resize()
     }
 }
 
-void GridWindow::load_grid(std::string file)
+void GridWindow::ResizeRectangles(int width, int height, int oldWidth)
 {
-    for (int i = 0; i < cellGrid.width; i++)
+    for (int i = 0; i < oldWidth; i++)
     {
         delete[] rectangles[i];
     }
     delete[] rectangles;
-
-    cellGrid.load(file);
 
     rectangles = new D2D1_RECT_F * [cellGrid.width];
     for (int i = 0; i < cellGrid.width; i++)
     {
         rectangles[i] = new D2D1_RECT_F[cellGrid.height];
     }
+}
+
+void GridWindow::load_grid(std::string file)
+{
+    int oldWidth = cellGrid.width;
+    cellGrid.load(file);
+    ResizeRectangles(cellGrid.width, cellGrid.height, oldWidth);
 }
 
 void GridWindow::DiscardGraphicsResources()

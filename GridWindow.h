@@ -2,6 +2,7 @@
 
 class GridWindow : public BaseWindow<GridWindow>
 {
+public:
     HCURSOR hCursor = LoadCursor(NULL, IDC_ARROW);
     bool running = false;
     bool drawGrid = false;
@@ -32,11 +33,11 @@ class GridWindow : public BaseWindow<GridWindow>
     void DiscardGraphicsResources();
     void OnPaint();
     void Resize();
+    void ResizeRectangles(int width, int height, int oldWidth);
     void DrawCellGrid();
 
     void load_grid(std::string file);
 
-public:
     PCWSTR  ClassName() const
     {
         return L"Main Window Class";
