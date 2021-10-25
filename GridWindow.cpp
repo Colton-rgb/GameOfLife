@@ -8,6 +8,7 @@
 #include "BaseWindow.h"
 #include "GridWindow.h"
 #include "Toolbar.h"
+#include "EditGridWindow.h"
 
 #define TIMER_ID 1
 
@@ -106,6 +107,10 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SendMessage(Window(), WM_SIZE, 0, 0);
 
             return 0;
+        }
+        if (GetAsyncKeyState('E'))
+        {
+            CreateEditGridWindow(cellGrid, m_hwnd);
         }
         if (GetAsyncKeyState(VK_ESCAPE))
         {

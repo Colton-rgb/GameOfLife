@@ -5,9 +5,11 @@
 #include "CellGrid.h"
 
 #define ID_BOK 1
+#define ID_EHEIGHT 2
 
 struct EditGridWinInfo
 {
+    HWND parent;
     HWND widthField;
     HWND heightField;
 };
@@ -24,23 +26,31 @@ HWND CreateEditGridWindow(CellGrid cg, HWND parent)
 
     RegisterClass(&inWndClass);
 
-    HWND hEditWind = CreateWindowEx(0, editClassName, L"Edit Grid", WS_OVERLAPPED ^ WS_SYSMENU, 200, 200, 220, 155, 0, 0, hInstance, 0);
+    EditGridWinInfo* info = new (std::nothrow) EditGridWinInfo;
+
+    if (info == NULL)
+    {
+        return 0;
+    }
+
+
+    HWND hEditWind = CreateWindowEx(0, editClassName, L"Edit Grid", WS_OVERLAPPED ^ WS_SYSMENU, 200, 200, 220, 155, 0, 0, hInstance, info);
 
     CreateWindowEx(0, L"STATIC", L"Resize Grid", WS_VISIBLE | WS_CHILD | SS_LEFT, 55, 10, 80, 18, hEditWind, 0, hInstance, 0);
 
-    HWND width = CreateWindowEx(0, L"STATIC", L"WIDTH: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 35, 65, 18, hEditWind, 0, hInstance, 0);
+    CreateWindowEx(0, L"STATIC", L"WIDTH: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 35, 65, 18, hEditWind, 0, hInstance, 0);
 
-    CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT, 75, 35, 100, 18, hEditWind, 0, hInstance, 0);
+    HWND hWidthField = CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER, 75, 35, 100, 18, hEditWind, 0, hInstance, 0);
 
-    HWND height = CreateWindowEx(0, L"STATIC", L"HEIGHT: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 55, 65, 18, hEditWind, 0, hInstance, 0);
+    CreateWindowEx(0, L"STATIC", L"HEIGHT: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 55, 65, 18, hEditWind, 0, hInstance, 0);
 
-    CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT, 75, 55, 100, 18, hEditWind, 0, hInstance, 0);
+    HWND hHeightField = CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER, 75, 55, 100, 18, hEditWind, (HMENU) ID_EHEIGHT, hInstance, 0);
 
-    EditGridWinInfo* info = new EditGridWinInfo;
-    info->heightField = height;
-    info->widthField = width;
+    info->parent = parent;
+    info->heightField = hHeightField;
+    info->widthField = hHeightField;
 
-    HWND hwndButton = CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 55, 85, 75, 25, hEditWind, (HMENU) ID_BOK, hInstance, &info);
+    HWND hwndButton = CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 55, 85, 75, 25, hEditWind, (HMENU) ID_BOK, hInstance, 0);
 
     ShowWindow(hEditWind, 1);
 
@@ -51,7 +61,7 @@ LRESULT CALLBACK EditGridPrc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     EditGridWinInfo* pInfo = 0;
 
-    if(uMsg == WM_NCCREATE)
+    if(uMsg == WM_CREATE)
     {
         CREATESTRUCT* pCreateStruct = (CREATESTRUCT*)lParam;
         pInfo = (EditGridWinInfo*)pCreateStruct->lpCreateParams;
@@ -65,7 +75,7 @@ LRESULT CALLBACK EditGridPrc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     switch (uMsg)
     {
     case WM_DESTROY:
-        delete pInfo;
+        //delete pInfo;
         return 0;
     case WM_PAINT:
     {
@@ -81,6 +91,9 @@ LRESULT CALLBACK EditGridPrc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         switch (LOWORD(wParam))
         {
         case ID_BOK:
+            LPWSTR buffer = new wchar_t[GetWindowTextLength(pInfo->heightField)];
+            GetDlgItemText(hwnd, ID_EHEIGHT, buffer, GetWindowTextLength(pInfo->heightField)+1);
+            MessageBox(hwnd, buffer, L"test", 0);
             SendMessage(hwnd, WM_CLOSE, 0, 0);
         }
     }
