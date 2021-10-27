@@ -33,6 +33,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             return -1;
         }
 
+        // Set cursors permanently FIX LATER
         SetCursor(hCursor);
 
         // TIMER
@@ -43,20 +44,24 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         return 0;
     }
+
     case WM_SETCURSOR:
+    {
         if (LOWORD(lParam) == HTCLIENT)
         {
             SetCursor(hCursor);
         }
-        return 0;
+    } return 0;
     case WM_DESTROY:
+    {
         KillTimer(m_hwnd, TIMER_ID);
         DiscardGraphicsResources();
         SafeRelease(&pFactory);
         PostQuitMessage(0);
-        return 0;
+    } return 0;
 
-    case WM_LBUTTONDOWN: {
+    case WM_LBUTTONDOWN:
+    {
         if (running == false)
         {
             int xPos = GET_X_LPARAM(lParam);
@@ -71,179 +76,20 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             // apply change to grid
             cellGrid.cells[gridX][gridY] = !cellGrid.cells[gridX][gridY];
         }
-        return 0;
-    }
+    } return 0;
 
     case WM_KEYDOWN:
     {
-        if (GetAsyncKeyState(0x52)) // R key
-        {
-            cellGrid.randomize();
-            return 0;
-        }
-        if (GetAsyncKeyState(0x47)) // G key
-        {
-            drawGrid = !drawGrid;
-            if (drawGrid)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
-            return 0;
-        }
-        if (GetAsyncKeyState(0x43)) // C key
-        {
-            cellGrid.clear();
-            return 0;
-        }
-        if (GetAsyncKeyState('S')) // S key
-        {
-            cellGrid.save("quick_save.txt");
-            return 0;
-        }
-        if (GetAsyncKeyState('L')) // L key
-        {
-            load_grid("quick_save.txt");
+        return HandleKeyboardInput();
+    } return 0;
 
-            SendMessage(Window(), WM_SIZE, 0, 0);
-
-            return 0;
-        }
-        if (GetAsyncKeyState('E'))
-        {
-            CreateEditGridWindow(&cellGrid, m_hwnd);
-        }
-        if (GetAsyncKeyState(VK_ESCAPE))
-        {
-            SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
-            return 0;
-        }
-        if (GetAsyncKeyState(VK_RIGHT))
-        {
-            cellGrid.update();
-            OnPaint();
-            return 0;
-        }
-        if (GetKeyState(VK_SPACE))
-        {
-            running = !running;
-            if (running)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
-            return 0;
-        }
-        return 0;
-    }
     case WM_COMMAND:
     {
-        switch (LOWORD(wParam))
-        {
-        case ID_TBRUN:
-            running = !running;
-            if(running)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
-            return 0;
-        case ID_TBGRID:
-            drawGrid = !drawGrid;
-            if (drawGrid)
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
-            else
-                SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
-            return 0;
-        case ID_TBSAVE:
-        {
-            IFileSaveDialog* pFileSave;
-
-            // Create the FileSaveDialog object.
-            HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
-                IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
-
-            // Add txt filter
-            COMDLG_FILTERSPEC testFilter = { };
-            testFilter.pszName = L"Text Document";
-            testFilter.pszSpec = L"*.txt";
-            pFileSave->SetFileTypes(1, &testFilter);
-
-            if (SUCCEEDED(hr))
-            {
-                hr = pFileSave->Show(NULL);
-
-                // Get the file name from the dialog box.
-                if (SUCCEEDED(hr))
-                {
-                    IShellItem* pItem;
-                    hr = pFileSave->GetResult(&pItem);
-                    if (SUCCEEDED(hr))
-                    {
-                        PWSTR pszFilePath;
-                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-                        if (SUCCEEDED(hr))
-                        {
-
-                            std::wstring ws(pszFilePath);
-                            std::string filePath(ws.begin(), ws.end());
-
-                            cellGrid.save(filePath);
-
-                            // MessageBoxW(NULL, pszFilePath, L"File Path", MB_OK);
-                            CoTaskMemFree(pszFilePath);
-                        }
-                        pItem->Release();
-                    }
-                }
-                pFileSave->Release();
-            }
-            return 0;
-        }
-        case ID_TBOPEN:
-        {
-            IFileSaveDialog* pFileOpen;
-
-            // Create the FileOpenDialog object.
-            HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-                IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
-
-            if (SUCCEEDED(hr))
-            {
-                hr = pFileOpen->Show(NULL);
-
-                // Get the file name from the dialog box.
-                if (SUCCEEDED(hr))
-                {
-                    IShellItem* pItem;
-                    hr = pFileOpen->GetResult(&pItem);
-                    if (SUCCEEDED(hr))
-                    {
-                        PWSTR pszFilePath;
-                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
-                        if (SUCCEEDED(hr))
-                        {
-
-                            std::wstring ws(pszFilePath);
-                            std::string filePath(ws.begin(), ws.end());
-
-                            load_grid(filePath);
-
-                            SendMessage(Window(), WM_SIZE, 0, 0);
-
-                            CoTaskMemFree(pszFilePath);
-                        }
-                        pItem->Release();
-                    }
-                }
-                pFileOpen->Release();
-            }
-
-            return 0;
-        }
-        }
-    }
-    return 0;
+        HandleCommonControls(wParam);
+    } return 0;
 
     case WM_TIMER:
+    {
         switch (wParam)
         {
         case TIMER_ID:
@@ -252,10 +98,13 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
                 cellGrid.update();
             }
         }
+        SendMessage(m_hwnd, WM_PAINT, 0, 0);
+    } return 0;
 
     case WM_PAINT:
+    {
         OnPaint();
-        return 0;
+    } return 0;
 
     case WM_SIZE:
         Resize();
@@ -266,6 +115,188 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         return 0;
     }
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
+}
+
+LRESULT GridWindow::HandleKeyboardInput()
+{
+    if (GetAsyncKeyState('R')) // R key
+    {
+        cellGrid.randomize();
+        return 0;
+    }
+
+    if (GetAsyncKeyState('G')) // G key
+    {
+        drawGrid = !drawGrid;
+        if (drawGrid)
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
+        else
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
+        return 0;
+    }
+
+    if (GetAsyncKeyState('C')) // C key
+    {
+        cellGrid.clear();
+        return 0;
+    }
+
+    if (GetAsyncKeyState('S')) // S key
+    {
+        cellGrid.save("quick_save.txt");
+        return 0;
+    }
+
+    if (GetAsyncKeyState('L')) // L key
+    {
+        load_grid("quick_save.txt");
+
+        SendMessage(Window(), WM_SIZE, 0, 0);
+
+        return 0;
+    }
+
+    if (GetAsyncKeyState('E')) // E key
+    {
+        CreateEditGridWindow(&cellGrid, m_hwnd);
+    }
+
+    if (GetAsyncKeyState(VK_ESCAPE))
+    {
+        SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
+        return 0;
+    }
+
+    if (GetAsyncKeyState(VK_RIGHT))
+    {
+        cellGrid.update();
+        OnPaint();
+        return 0;
+    }
+
+    if (GetKeyState(VK_SPACE))
+    {
+        running = !running;
+        if (running)
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
+        else
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
+        return 0;
+    }
+
+    return 0;
+}
+
+LRESULT GridWindow::HandleCommonControls(WPARAM wParam)
+{
+    switch (LOWORD(wParam))
+    {
+    case ID_TBRUN:
+    {
+        running = !running;
+        if (running)
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, MAKELONG(1, 0));
+        else
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBRUN, 0);
+        return 0;
+    }
+
+    case ID_TBGRID:
+    {
+        drawGrid = !drawGrid;
+        if (drawGrid)
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
+        else
+            SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
+    } return 0;
+
+    case ID_TBSAVE:
+    {
+        IFileSaveDialog* pFileSave;
+
+        // Create the FileSaveDialog object.
+        HRESULT hr = CoCreateInstance(CLSID_FileSaveDialog, NULL, CLSCTX_ALL,
+            IID_IFileSaveDialog, reinterpret_cast<void**>(&pFileSave));
+
+        // Add txt filter
+        COMDLG_FILTERSPEC testFilter = { };
+        testFilter.pszName = L"Text Document";
+        testFilter.pszSpec = L"*.txt";
+        pFileSave->SetFileTypes(1, &testFilter);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = pFileSave->Show(NULL);
+
+            // Get the file name from the dialog box.
+            if (SUCCEEDED(hr))
+            {
+                IShellItem* pItem;
+                hr = pFileSave->GetResult(&pItem);
+                if (SUCCEEDED(hr))
+                {
+                    PWSTR pszFilePath;
+                    hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+                    if (SUCCEEDED(hr))
+                    {
+
+                        std::wstring ws(pszFilePath);
+                        std::string filePath(ws.begin(), ws.end());
+
+                        cellGrid.save(filePath);
+
+                        // MessageBoxW(NULL, pszFilePath, L"File Path", MB_OK);
+                        CoTaskMemFree(pszFilePath);
+                    }
+                    pItem->Release();
+                }
+            }
+            pFileSave->Release();
+        }
+    } return 0;
+
+    case ID_TBOPEN:
+    {
+        IFileSaveDialog* pFileOpen;
+
+        // Create the FileOpenDialog object.
+        HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+            IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+        if (SUCCEEDED(hr))
+        {
+            hr = pFileOpen->Show(NULL);
+
+            // Get the file name from the dialog box.
+            if (SUCCEEDED(hr))
+            {
+                IShellItem* pItem;
+                hr = pFileOpen->GetResult(&pItem);
+                if (SUCCEEDED(hr))
+                {
+                    PWSTR pszFilePath;
+                    hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                    if (SUCCEEDED(hr))
+                    {
+
+                        std::wstring ws(pszFilePath);
+                        std::string filePath(ws.begin(), ws.end());
+
+                        load_grid(filePath);
+
+                        SendMessage(Window(), WM_SIZE, 0, 0);
+
+                        CoTaskMemFree(pszFilePath);
+                    }
+                    pItem->Release();
+                }
+            }
+            pFileOpen->Release();
+        }
+    } return 0;
+    } // End switch (wParam)
+    return 0;
 }
 
 HRESULT GridWindow::CreateGraphicsResources()

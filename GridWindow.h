@@ -8,7 +8,7 @@ public:
     bool drawGrid = false;
 
     // CellGird Details
-    CellGrid cellGrid = CellGrid(25, 25);
+    CellGrid cellGrid = CellGrid(75, 50);
     D2D1_SIZE_F size = { 0 };
     float cellLength = NULL;
     float init_x = 0;
@@ -27,6 +27,11 @@ public:
     // Toolbar
     HWND hToolbar = 0;
     RECT tbRect = { 0 };
+
+
+    LRESULT HandleKeyboardInput();
+    LRESULT HandleCommonControls(WPARAM wParam);
+
 
     void CalculateLayout();
     HRESULT CreateGraphicsResources();

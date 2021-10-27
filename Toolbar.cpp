@@ -42,9 +42,9 @@ HWND CreateToolbar(HWND hWndParent)
     {
         { MAKELONG(STD_REDOW, ImageListID),  ID_TBRUN,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Run" },
         { MAKELONG(STD_PRINTPRE, ImageListID),  ID_TBGRID, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Grid"},
+        { MAKELONG(STD_PROPERTIES, ImageListID), ID_TBEDIT, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Edit"},
         { MAKELONG(STD_FILEOPEN, ImageListID), ID_TBOPEN, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Open"},
-        { MAKELONG(STD_FILESAVE, ImageListID), ID_TBSAVE, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Save"},
-        { MAKELONG(STD_PROPERTIES, ImageListID), ID_TBEDIT, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Edit"}
+        { MAKELONG(STD_FILESAVE, ImageListID), ID_TBSAVE, TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Save"}
     };
 
     // Add buttons.
