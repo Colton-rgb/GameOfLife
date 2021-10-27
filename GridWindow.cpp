@@ -33,7 +33,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             return -1;
         }
 
-        // Set cursors permanently FIX LATER
+        // Set cursors permanently
         SetCursor(hCursor);
 
         // TIMER
