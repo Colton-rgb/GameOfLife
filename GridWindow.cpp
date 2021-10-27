@@ -156,10 +156,10 @@ LRESULT GridWindow::HandleKeyboardInput()
         return 0;
     }
 
-    if (GetAsyncKeyState('E')) // E key
-    {
-        CreateEditGridWindow(&cellGrid, m_hwnd);
-    }
+    //if (GetAsyncKeyState('E')) // E key
+    //{
+    //    CreateEditGridWindow(&cellGrid, m_hwnd);
+    //}
 
     if (GetAsyncKeyState(VK_ESCAPE))
     {
@@ -208,6 +208,21 @@ LRESULT GridWindow::HandleCommonControls(WPARAM wParam)
             SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, MAKELONG(1, 0));
         else
             SendMessage(hToolbar, TB_MARKBUTTON, ID_TBGRID, 0);
+    } return 0;
+
+    case ID_TBEDIT:
+    {
+        CreateEditGridWindow(&cellGrid, m_hwnd);
+    } return 0;
+
+    case ID_TBDELETE:
+    {
+        cellGrid.clear();
+    } return 0;
+
+    case ID_TBRANDOMIZE:
+    {
+        cellGrid.randomize();
     } return 0;
 
     case ID_TBSAVE:
