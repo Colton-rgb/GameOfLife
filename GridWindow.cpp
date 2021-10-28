@@ -12,6 +12,8 @@
 
 #define TIMER_ID 1
 
+
+// Safe Releases some of the variables created for Direct 2D, found in the windows documentation
 template <class T>
 void SafeRelease(T** ppT)
 {
@@ -22,6 +24,7 @@ void SafeRelease(T** ppT)
     }
 }
 
+// Very long function that handles all of the messages that the window will recieve from Windows
 LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
@@ -33,13 +36,12 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             return -1;
         }
 
-        // Set cursors permanently
+        // Sets cursors permanently
         SetCursor(hCursor);
 
-        // TIMER
+        // Creation of the timer that will redraw the screen
         SetTimer(m_hwnd, TIMER_ID, 75, (TIMERPROC)NULL);
 
-        // TOOLBAR
         hToolbar = CreateToolbar(m_hwnd);
 
         return 0;
@@ -85,7 +87,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_COMMAND:
     {
-        HandleCommonControls(wParam);
+        return HandleCommonControls(wParam);
     } return 0;
 
     case WM_TIMER:
@@ -107,13 +109,15 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
     } return 0;
 
     case WM_SIZE:
+    {
         Resize();
 
         // Resize the toolbar
         SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
-        
-        return 0;
-    }
+    } return 0;
+    } // End of switch
+
+    // Let windows handle all of the messages I don't care about
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
 
@@ -150,31 +154,24 @@ LRESULT GridWindow::HandleKeyboardInput()
     if (GetAsyncKeyState('L')) // L key
     {
         load_grid("quick_save.txt");
-
         SendMessage(Window(), WM_SIZE, 0, 0);
-
         return 0;
     }
 
-    //if (GetAsyncKeyState('E')) // E key
-    //{
-    //    CreateEditGridWindow(&cellGrid, m_hwnd);
-    //}
-
-    if (GetAsyncKeyState(VK_ESCAPE))
+    if (GetAsyncKeyState(VK_ESCAPE)) // ESC key
     {
         SendMessage(m_hwnd, WM_CLOSE, NULL, NULL);
         return 0;
     }
 
-    if (GetAsyncKeyState(VK_RIGHT))
+    if (GetAsyncKeyState(VK_RIGHT)) // Right Arrow Key
     {
         cellGrid.update();
         OnPaint();
         return 0;
     }
 
-    if (GetKeyState(VK_SPACE))
+    if (GetKeyState(VK_SPACE)) // Space key
     {
         running = !running;
         if (running)
@@ -187,6 +184,8 @@ LRESULT GridWindow::HandleKeyboardInput()
     return 0;
 }
 
+
+// Another long function that handles all of the common control messages
 LRESULT GridWindow::HandleCommonControls(WPARAM wParam)
 {
     switch (LOWORD(wParam))
@@ -227,6 +226,8 @@ LRESULT GridWindow::HandleCommonControls(WPARAM wParam)
 
     case ID_TBSAVE:
     {
+        // Creating the pop up window to select a file is very long-winded
+
         IFileSaveDialog* pFileSave;
 
         // Create the FileSaveDialog object.
@@ -310,10 +311,11 @@ LRESULT GridWindow::HandleCommonControls(WPARAM wParam)
             pFileOpen->Release();
         }
     } return 0;
-    } // End switch (wParam)
+    } // End of switch (wParam)
     return 0;
 }
 
+// Create and fill in all of the data need to draw to the window
 HRESULT GridWindow::CreateGraphicsResources()
 {
     HRESULT hr = S_OK;
@@ -351,6 +353,7 @@ HRESULT GridWindow::CreateGraphicsResources()
     return hr;
 }
 
+// When the windows changes size, so does everything inside of it
 void GridWindow::CalculateLayout()
 {
     if (pRenderTarget != NULL)
@@ -406,7 +409,6 @@ void GridWindow::OnPaint()
 
 void GridWindow::DrawCellGrid()
 {
-
     for (int i = 0; i < cellGrid.width; i++)
     {
         for (int j = 0; j < cellGrid.height; j++)
@@ -462,6 +464,7 @@ void GridWindow::Resize()
     }
 }
 
+// Clears the memory from the old rectangles and fills in new memory with the new width and height
 void GridWindow::ResizeRectangles(int width, int height, int oldWidth)
 {
     for (int i = 0; i < oldWidth; i++)

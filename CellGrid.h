@@ -3,7 +3,6 @@
 
 class CellGrid
 {
-
 public:
 	bool** cells;
 	bool** buffer;

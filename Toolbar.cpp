@@ -3,6 +3,9 @@
 
 #include "Toolbar.h"
 
+
+// Globar variables because their will only be one toolbar and one main window
+// Not worth creating a data structure for just two variabls that will only be used once
 HIMAGELIST g_hImageList = NULL;
 HINSTANCE g_hInst = NULL;
 
@@ -19,11 +22,7 @@ HWND CreateToolbar(HWND hWndParent)
 
     // Create the toolbar.
     HWND hWndToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, NULL, WS_CHILD | TBSTYLE_WRAPABLE, 0, 0, 0, 0, hWndParent, NULL, g_hInst, NULL);
-
-    if (hWndToolbar == NULL)
-    {
-        return NULL;
-    }
+    if (hWndToolbar == NULL) return NULL;
 
     // Create the image list.
     // Dimensions of individual bitmaps. // Ensures transparent background.
@@ -37,7 +36,6 @@ HWND CreateToolbar(HWND hWndParent)
 
     // Initialize button info.
     // IDM_NEW, IDM_OPEN, and IDM_SAVE are application-defined command constants.
-
     TBBUTTON tbButtons[numButtons] =
     {
         { MAKELONG(STD_REDOW, ImageListID),  ID_TBRUN,  TBSTATE_ENABLED, buttonStyles, {0}, 0, (INT_PTR)L"Run" },

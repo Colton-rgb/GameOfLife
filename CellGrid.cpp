@@ -8,6 +8,7 @@ using namespace std;
 
 #include "CellGrid.h"
 
+// Constructor
 CellGrid::CellGrid(int width, int height)
 {
 	this->width = width;
@@ -16,6 +17,7 @@ CellGrid::CellGrid(int width, int height)
 	generate(width, height);
 }
 
+// Fills the cells and buffer arrays with 0's, the array sizes are newWidht and newHeight
 void CellGrid::generate(int newWidth, int newHeight)
 {
 	if (cells && buffer)
@@ -48,6 +50,8 @@ void CellGrid::generate(int newWidth, int newHeight)
 	}
 }
 
+
+// Apply the rules of Conway's Game of Life to the array of booleans
 void CellGrid::update()
 {
 	for (int i = 0; i < width; i++)
@@ -85,6 +89,7 @@ void CellGrid::update()
 	}
 }
 
+// Utility for update(), returns the number of true booleans adjacent any given row and column
 int CellGrid::getLiveNeighbors(int row, int col)
 {
 	int cAlive = 0;
@@ -105,6 +110,7 @@ int CellGrid::getLiveNeighbors(int row, int col)
 	return cAlive;
 }
 
+// Fills the cell array with random 1's or 0's
 void CellGrid::randomize() {
 	for (int i = 0; i < width; i++)
 	{
@@ -115,6 +121,7 @@ void CellGrid::randomize() {
 	}
 }
 
+// Fills cell array with 0's
 void CellGrid::clear()
 {
 	for (int i = 0; i < width; i++)
@@ -126,6 +133,7 @@ void CellGrid::clear()
 	}
 }
 
+// Save the current cell array to a file with the first two int's being the width and height
 void CellGrid::save(std::string file)
 {
 	ofstream outdata;
@@ -145,6 +153,7 @@ void CellGrid::save(std::string file)
 	outdata.close();
 }
 
+// Load a given file from a string filepath into the cell array, first two int's being the width and height
 void CellGrid::load(std::string file)
 {
 	ifstream indata;

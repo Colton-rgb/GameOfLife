@@ -3,6 +3,7 @@
 class GridWindow : public BaseWindow<GridWindow>
 {
 public:
+    // Application State variables
     HCURSOR hCursor = LoadCursor(NULL, IDC_ARROW);
     bool running = false;
     bool drawGrid = false;
@@ -28,11 +29,11 @@ public:
     HWND hToolbar = 0;
     RECT tbRect = { 0 };
 
-
+    // Window Input
     LRESULT HandleKeyboardInput();
     LRESULT HandleCommonControls(WPARAM wParam);
 
-
+    // Drawing Functions
     void CalculateLayout();
     HRESULT CreateGraphicsResources();
     void DiscardGraphicsResources();
@@ -41,6 +42,7 @@ public:
     void ResizeRectangles(int width, int height, int oldWidth);
     void DrawCellGrid();
 
+    // Operations on the Cell Grid
     void load_grid(std::string file);
 
     PCWSTR  ClassName() const
