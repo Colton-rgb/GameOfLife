@@ -3,7 +3,6 @@
 
 #include "Toolbar.h"
 
-
 // Global variables because their will only be one toolbar and one main window
 // Not worth creating a data structure for just two variabls that will only be used once
 HIMAGELIST g_hImageList = NULL;
