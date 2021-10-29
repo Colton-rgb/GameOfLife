@@ -14,11 +14,9 @@
 #include "CellGrid.h"
 #include "GridWindow.h"
 
-
 // Must be using windows subsystem
-int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ int nCmdShow)
+int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCmdLine, _In_ INT nCmdShow)
 {
-
     // Initialize COM
     if (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE) != 0)
     {
@@ -27,7 +25,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ PWSTR pCm
 
     // Creation of the main window
     GridWindow win;
-    if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW| WS_CLIPCHILDREN))
+    if (!win.Create(L"Game of Life", WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN))
     {
         return 0;
     }

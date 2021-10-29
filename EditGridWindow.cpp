@@ -47,15 +47,11 @@ HWND CreateEditGridWindow(CellGrid *pCellgrid, HWND parent)
 
 
     // Create all the common contorls and lay them out in the window
-
     CreateWindowEx(0, L"STATIC", L"Resize Grid", WS_VISIBLE | WS_CHILD | SS_LEFT, 55, 10, 80, 18, hEditWnd, 0, hInstance, 0);
-
     CreateWindowEx(0, L"STATIC", L"WIDTH: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 35, 65, 18, hEditWnd, 0, hInstance, 0);
-
-    HWND hWidthField = CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER, 75, 35, 100, 18, hEditWnd, (HMENU) ID_EWIDTH, hInstance, 0);
-
     CreateWindowEx(0, L"STATIC", L"HEIGHT: ", WS_VISIBLE | WS_CHILD | SS_LEFT, 10, 55, 65, 18, hEditWnd, 0, hInstance, 0);
 
+    HWND hWidthField = CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER, 75, 35, 100, 18, hEditWnd, (HMENU) ID_EWIDTH, hInstance, 0);
     HWND hHeightField = CreateWindowEx(0, L"EDIT", 0, WS_BORDER | WS_CHILD | WS_VISIBLE | ES_LEFT | ES_NUMBER, 75, 55, 100, 18, hEditWnd, (HMENU) ID_EHEIGHT, hInstance, 0);
 
     CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON, 55, 85, 75, 25, hEditWnd, (HMENU)ID_BOK, hInstance, 0);
@@ -103,7 +99,6 @@ LRESULT CALLBACK EditGridPrc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(hwnd, &ps);
         FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
-
         EndPaint(hwnd, &ps);
     }
     case WM_COMMAND:
