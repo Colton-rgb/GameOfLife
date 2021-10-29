@@ -18,6 +18,14 @@ struct EditGridWinInfo
     HWND widthField;
     HWND heightField;
     CellGrid* pCellGrid;
+
+    EditGridWinInfo()
+    {
+        parent = 0;
+        widthField = 0;
+        heightField = 0;
+        pCellGrid = 0;
+    }
 };
 
 HWND CreateEditGridWindow(CellGrid *pCellgrid, HWND parent)
@@ -25,7 +33,6 @@ HWND CreateEditGridWindow(CellGrid *pCellgrid, HWND parent)
 
     // GetModuleHandle(0) returns a handle to the instance that called the function
     HINSTANCE hInstance = GetModuleHandle(0);
-
 
     // Create a new window class for editing the cell grid
     const wchar_t editClassName[] = L"Edit Grid Class";
@@ -44,7 +51,6 @@ HWND CreateEditGridWindow(CellGrid *pCellgrid, HWND parent)
 
     // Passing info to the CreateWindow function allow for later use of the pointer for managing application state
     HWND hEditWnd = CreateWindowEx(0, editClassName, L"Edit Grid", WS_OVERLAPPED ^ WS_SYSMENU, 200, 200, 220, 155, 0, 0, hInstance, info);
-
 
     // Create all the common contorls and lay them out in the window
     CreateWindowEx(0, L"STATIC", L"Resize Grid", WS_VISIBLE | WS_CHILD | SS_LEFT, 55, 10, 80, 18, hEditWnd, 0, hInstance, 0);
@@ -138,6 +144,7 @@ LRESULT CALLBACK EditGridPrc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 SendMessage(pInfo->parent, WM_SIZE, 0, 0);
             }
 
+            // Close the current EditGridWindow
             SendMessage(hwnd, WM_CLOSE, 0, 0);
         }
     }

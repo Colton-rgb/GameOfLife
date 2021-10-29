@@ -17,7 +17,7 @@ CellGrid::CellGrid(int width, int height)
 	generate(width, height);
 }
 
-// Fills the cells and buffer arrays with 0's, the array sizes are newWidht and newHeight
+// Fills the cells and buffer arrays with 0's, the array sizes are newWidth and newHeight
 void CellGrid::generate(int newWidth, int newHeight)
 {
 	if (cells && buffer)
@@ -66,10 +66,10 @@ void CellGrid::update()
 	{
 		for (int j = 0; j < height; j++)
 		{
-			int nCount = getLiveNeighbors(i, j);
+			int iCount = getLiveNeighbors(i, j);
 			if (buffer[i][j] == true)
 			{
-				if (nCount < 2 || nCount > 3)
+				if (iCount < 2 || iCount > 3)
 				{
 					cells[i][j] = false;
 				}
@@ -80,7 +80,7 @@ void CellGrid::update()
 			}
 			else if(buffer[i][j] == false)
 			{
-				if (nCount == 3)
+				if (iCount == 3)
 				{
 					cells[i][j] = true;
 				}

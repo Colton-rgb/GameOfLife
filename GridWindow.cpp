@@ -433,6 +433,26 @@ void GridWindow::DrawCellGrid()
             pRenderTarget->FillRectangle(rectangles[i][j], pBrush);
         }
     }
+
+    // Outline grid
+
+    // D2D1::Point2F(init_x + cellLength * cellGrid.width, init_y + cellLength * cellGrid.height)
+    pBrush->SetColor(D2D1::ColorF(0, 0.75f, 1.0f));
+
+    pRenderTarget->DrawLine(D2D1::Point2F(init_x, init_y + 1), D2D1::Point2F(init_x * cellLength * cellGrid.width, init_y + 1), pBrush, 3);
+
+    pRenderTarget->DrawLine(
+        D2D1::Point2F(init_x, init_y + cellLength * cellGrid.height - 1),
+        D2D1::Point2F(init_x + cellLength * cellGrid.width, init_y + cellLength * cellGrid.height - 1), pBrush,
+        3);
+
+    pRenderTarget->DrawLine(D2D1::Point2F(init_x, init_y), D2D1::Point2F(init_x, init_y * cellLength * cellGrid.height), pBrush, 3);
+
+    pRenderTarget->DrawLine(
+        D2D1::Point2F(init_x + cellLength * cellGrid.width, init_y),
+        D2D1::Point2F(init_x + cellLength * cellGrid.width, init_y * cellLength * cellGrid.height), pBrush,
+        3);
+
     // Draw Grid
     if (drawGrid)
     {

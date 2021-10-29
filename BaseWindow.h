@@ -1,5 +1,11 @@
 #pragma once
 
+// This is boiler plate code from the win32 documentation
+// 
+// It creates a new BaseWindow class that passes a pointer
+// to the class deriving it for managing application state
+// and instance variables.
+
 template <class DERIVED_TYPE>
 class BaseWindow
 {
@@ -63,9 +69,9 @@ public:
     HWND Window() const { return m_hwnd; }
 
 protected:
+    HWND m_hwnd;
 
     virtual PCWSTR  ClassName() const = 0;
     virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) = 0;
 
-    HWND m_hwnd;
 };
