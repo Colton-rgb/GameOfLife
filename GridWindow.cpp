@@ -12,7 +12,6 @@
 
 #define TIMER_ID 1
 
-
 // Safe Releases some of the variables created for Direct 2D, found in the windows documentation
 template <class T>
 void SafeRelease(T** ppT)
@@ -54,6 +53,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SetCursor(hCursor);
         }
     } return 0;
+
     case WM_DESTROY:
     {
         KillTimer(m_hwnd, TIMER_ID);
@@ -115,6 +115,7 @@ LRESULT GridWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         // Resize the toolbar
         SendMessage(hToolbar, TB_AUTOSIZE, 0, 0);
     } return 0;
+
     } // End of switch
 
     // Let windows handle all of the messages I don't care about
@@ -456,7 +457,7 @@ void GridWindow::DrawCellGrid()
     // Draw Grid
     if (drawGrid)
     {
-        pBrush->SetColor(D2D1::ColorF(1.0f, 1.0f, 1.0f));
+        pBrush->SetColor(D2D1::ColorF(0.50f, 0.50f, 0.50f));
         for (int i = 0; i < cellGrid.width + 1; i++)
         {
             pRenderTarget->DrawLine(D2D1::Point2F(init_x + cellLength * i, init_y), D2D1::Point2F(init_x + cellLength * i, init_y + size.height), pBrush);
